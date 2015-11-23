@@ -47,6 +47,10 @@
     <Reference Include="Mono.Cecil.Rocks">
       <HintPath>packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
+    <Reference Include="NDesk.Options, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -68,8 +72,6 @@
     <Compile Include="ISupportedCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SupportedCommandFactory.cs" />
-    <Compile Include="InvalidArguments.cs" />
     <Compile Include="TypeDefinitionExtensions.cs" />
     <Compile Include="TypeInventory.cs" />
     <Compile Include="TypeReferenceExtensions.cs" />

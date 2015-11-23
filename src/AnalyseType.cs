@@ -1,38 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Deepend
 {
     public class AnalyseType : ISupportedCommand
     {
-        public AnalyseType()
+		public string AssemblyName { get; set; }
+
+        public string TypeName { get; set; }
+
+        public void Execute(IGraphDependencies graph)
         {
-        }
+			if (!File.Exists(this.AssemblyName))
+			{
+				throw new FileNotFoundException("File " + this.AssemblyName + " not found");
+			}
 
-        private string TypeName { get; set; }
+			if (String.IsNullOrEmpty(this.TypeName))
+			{
+				throw new ArgumentException("Type not specified");
+			}
 
-        public void Initialise(IEnumerable<string> arguments)
-        {
-            //this.TypeName = tn;
-        }
-
-
-        public void Execute()
-        {
-        }
-
-        public string Name { get { return "type"; } }
-
-        public string Syntax
-        {
-            get
-            {
-                StringBuilder builder = new StringBuilder();
-
-                builder.AppendLine("<type> <assembly name>");
-
-                return builder.ToString();
-            }
         }
     }
 }

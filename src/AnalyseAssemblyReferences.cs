@@ -12,6 +12,8 @@ namespace Deepend
 	{
 		public string AssemblyName { get; set; }
 
+		public ReferenceDepth Depth { get; set; }
+
 		public void Execute(IGraphDependencies graph)
 		{
 			if (!File.Exists(this.AssemblyName))
@@ -21,7 +23,7 @@ namespace Deepend
 
 			var assemblyList = new List<string>();
 
-			var ar = AssemblyReference.Load(this.AssemblyName, assemblyList);
+			var ar = AssemblyReference.Load(this.AssemblyName, this.Depth, 0, assemblyList);
 
 			var list = new HashSet<IGraphable>();
 

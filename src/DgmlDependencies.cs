@@ -7,8 +7,8 @@ namespace Deepend
 {
     public class DgmlDependencies : IGraphDependencies
     {
-		private HashSet<string> _nodes = new HashSet<string>();
-		private HashSet<string> _links = new HashSet<string>();
+		private SortedSet<string> _nodes = new SortedSet<string>();
+		private SortedSet<string> _links = new SortedSet<string>();
 
         public void SaveTo(TextWriter writer)
         {

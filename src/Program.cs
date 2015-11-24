@@ -15,6 +15,7 @@ namespace Deepend
 				string specificType = string.Empty;
 				string specificNamespace = string.Empty;
 				bool analyseReferences = false;
+				bool recursive = false;
 				string outputPath = string.Empty;
 				bool outputAsDot = false;
 				bool outputAsDgml = true;
@@ -26,7 +27,7 @@ namespace Deepend
 					{ "t|type=", "Analyse Specific Type", v => specificType = v },
 					{ "ns|namespace=", "Analyse Specific Namespace", v => specificNamespace = v },
 					{ "r|refs", "Analyse References Only", v => analyseReferences = true },
-					// recursive
+					{ "recursive", "Recursively Analyse References", v => recursive = true },
 					{ "o|output=", "Output Path", v => outputPath = v },
 					{ "dot", "Output as .dot file", v => outputAsDot = true },
 					{ "dgml", "Output as .dgml file", v => outputAsDgml = true },
@@ -51,7 +52,8 @@ namespace Deepend
 				{
 					command = new AnalyseAssemblyReferences
 					{
-						AssemblyName = assemblyPath
+						AssemblyName = assemblyPath,
+						Depth = recursive ? ReferenceDepth.Recursive : ReferenceDepth.TopLevelOnly
 					};
 				}
 				else if (!String.IsNullOrEmpty(specificType))

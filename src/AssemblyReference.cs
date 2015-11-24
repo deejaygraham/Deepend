@@ -23,7 +23,7 @@ namespace Deepend
 
 		public List<AssemblyReference> References { get; set; }
 
-		public static AssemblyReference Load(string name, IList<string> assemblies)
+		public static AssemblyReference Load(string name, ReferenceDepth depth, int level, IList<string> assemblies)
 		{
 			var assemblyContent = AssemblyDefinition.ReadAssembly(name);
 
@@ -36,6 +36,9 @@ namespace Deepend
  				Location = AssemblyLocation.Local
 			};
 
+			if (depth == ReferenceDepth.TopLevelOnly && level >= 1)
+				return ar;
+
 			var refList = assemblyContent.MainModule.AssemblyReferences;
 
 			foreach (var r in refList)
@@ -47,7 +50,7 @@ namespace Deepend
 					if (!assemblies.Contains(candidateAssembly))
 					{
 						assemblies.Add(candidateAssembly);
-						ar.References.Add(AssemblyReference.Load(candidateAssembly, assemblies));
+						ar.References.Add(AssemblyReference.Load(candidateAssembly, depth, level + 1, assemblies));
 					}
 				}
 				else
@@ -167,6 +170,12 @@ namespace Deepend
 		GlobalAssemblyCache
 	}
 	
+	public enum ReferenceDepth
+	{
+		TopLevelOnly,
+		Recursive
+	}
+
 	internal class GacApi
 	{
 		[DllImport("fusion.dll")]

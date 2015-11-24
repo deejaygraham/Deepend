@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Deepend
 {
     public class DgmlDependencies : IGraphDependencies
     {
-        private List<string> _nodes = new List<string>();
-        private List<KeyValuePair<string, string>> _links = new List<KeyValuePair<string,string>>();
-		private List<KeyValuePair<string, string>> _inheritances = new List<KeyValuePair<string, string>>();
-		private List<KeyValuePair<string, string>> _implementations = new List<KeyValuePair<string, string>>();
-        
-        private Dictionary<string, List<string>> _namespacesToTypes = new Dictionary<string, List<string>>();
-        // groups for ms, system...
+		private HashSet<string> _nodes = new HashSet<string>();
+		private HashSet<string> _links = new HashSet<string>();
 
         public void SaveTo(TextWriter writer)
         {
@@ -21,47 +17,18 @@ namespace Deepend
 
             writer.WriteLine("\t<Nodes>");
 
-            //int i = 0;
-
-            this._nodes.Sort();
-
-            foreach (string node in this._nodes)
-            {
-                writer.WriteLine("\t\t<Node Id=\"CLS_{0}\" Label=\"{1}\" />", node, node);
-            }
-
-            foreach (string node in this._namespacesToTypes.Keys)
-            {
-                writer.WriteLine("\t\t<Node Id=\"NS_{0}\" Label=\"{0}\" Group=\"Expanded\" />", node);
-            }
+			foreach (string node in this._nodes)
+			{
+				writer.WriteLine("\t\t{0}", node);
+			}
 
             writer.WriteLine("\t</Nodes>");
 
             writer.WriteLine("\t<Links>");
 
-            foreach (string node in this._namespacesToTypes.Keys)
-            {
-                var list = this._namespacesToTypes[node];
-
-                foreach (string c in list)
-                {
-                    writer.WriteLine("\t\t<Link Source=\"NS_{0}\" Target=\"CLS_{1}\" Category=\"Contains\" />", node, c);
-                }
-            }
-
-            foreach (KeyValuePair<string, string> pair in this._links)
-            {
-				writer.WriteLine("\t\t<Link Source=\"CLS_{0}\" Target=\"CLS_{1}\" />", pair.Key, pair.Value);
-            }
-
-			foreach (KeyValuePair<string, string> pair in this._inheritances)
+			foreach (string link in this._links)
 			{
-				writer.WriteLine("\t\t<Link Source=\"CLS_{0}\" Target=\"CLS_{1}\" Label=\"Derived From\" />", pair.Key, pair.Value);
-			}
-
-			foreach (KeyValuePair<string, string> pair in this._implementations)
-			{
-				writer.WriteLine("\t\t<Link Source=\"CLS_{0}\" Target=\"CLS_{1}\" Label=\"Implements\" StrokeDashArray=\"1,3\" />", pair.Key, pair.Value);
+				writer.WriteLine("\t\t{0}", link);
 			}
 
             writer.WriteLine("\t</Links>");
@@ -69,65 +36,51 @@ namespace Deepend
             writer.WriteLine("</DirectedGraph>");
         }
 
-        public void Declare(IntrospectedType t)
-        {
-            if (t.Name.StartsWith("<"))
-                return;
+		public void Node(Node n)
+		{
+			var builder = new StringBuilder();
 
-            string t1Name = t.Name;
-            
-            if (t.Namespace.StartsWith("System") || t.Namespace.StartsWith("Microsoft"))
-                t1Name = t.Namespace + "." + t.Name;
+			builder.AppendFormat("<Node Id=\"{0}\" Label=\"{1}\" ", n.Id, n.Name);
 
-            if (!this._namespacesToTypes.ContainsKey(t.Namespace))
-                this._namespacesToTypes.Add(t.Namespace, new List<string>());
+			if (n.Group)
+			{
+				builder.Append("Group=\"Expanded\" ");
+			}
 
-			t1Name = t1Name.Replace("&", "");
+			if (!String.IsNullOrEmpty(n.Colour))
+			{
+				builder.AppendFormat("Background=\"{0}\" ", n.Colour);
+			}
 
-            if (!this._nodes.Contains(t1Name))
-            {
-                this._nodes.Add(t1Name);
-                this._namespacesToTypes[t.Namespace].Add(t1Name);
-            }
-        }
+			builder.AppendLine(" />");
 
-        public void Link(IntrospectedType t1, IntrospectedType t2, LinkRelationship relationship)
-        {
-            if (t1.Name.StartsWith("<") || t2.Name.StartsWith("<"))
-                return;
+			this._nodes.Add(builder.ToString());
+		}
 
-            string t1Name = t1.Name;
-            string t2Name = t2.Name;
-			
-            if (String.Compare(t1Name, t2Name, true) == 0)
-                return;
+		public void Edge(Edge e)
+		{
+			var builder = new StringBuilder();
 
-            if (t1.Namespace.StartsWith("System") || t1.Namespace.StartsWith("Microsoft"))
-                t1Name = t1.Namespace + "." + t1.Name;
+			builder.AppendFormat("<Link Source=\"{0}\" Target=\"{1}\" ", e.From, e.To);
 
-            if (t2.Namespace.StartsWith("System") || t2.Namespace.StartsWith("Microsoft"))
-                t2Name = t2.Namespace + "." + t2.Name;
+			if (e.Group)
+			{
+				builder.Append("Category=\"Contains\" ");
+			}
 
-            if (!this._namespacesToTypes.ContainsKey(t1.Namespace))
-                this._namespacesToTypes.Add(t1.Namespace, new List<string>());
+			if (!String.IsNullOrEmpty(e.Description))
+			{
+				builder.AppendFormat("Label=\"{0}\" ", e.Description);
+			}
 
-            if (!this._namespacesToTypes.ContainsKey(t2.Namespace))
-                this._namespacesToTypes.Add(t2.Namespace, new List<string>());
+			if (e.DotLine)
+			{
+				builder.Append("StrokeDashArray=\"1,3\" ");
+			}
 
-			t1Name = t1Name.Replace("&", "");
-			t2Name = t2Name.Replace("&", "");
+			builder.AppendLine(" />");
 
-            this._namespacesToTypes[t1.Namespace].Add(t1Name);
-            this._namespacesToTypes[t2.Namespace].Add(t2Name);
-
-			KeyValuePair<string, string> pair = new KeyValuePair<string, string>(t1Name, t2Name);
-
-			if (relationship == LinkRelationship.Dependency)
-				this._links.Add(pair);
-			else if (relationship == LinkRelationship.Inheritance)
-				this._inheritances.Add(pair);
-			else if (relationship == LinkRelationship.Interface)
-				this._implementations.Add(pair);
-        }
+			this._links.Add(builder.ToString());
+		}
     }
 }

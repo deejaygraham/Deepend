@@ -37,7 +37,13 @@ namespace Deepend
                 factory.CreateFrom(type, typeInventory);
             }
 
-            typeInventory.Generate(graph);
+			var list = typeInventory.Generate();
+
+			foreach (var item in list)
+			{
+				item.WriteTo(graph);
+			}
+
         }
     }
 }

@@ -23,14 +23,14 @@ namespace Deepend
             writer.WriteLine("}");
         }
 
-        public void Declare(IntrospectedType t)
-        {
-            this._graphContent.Add(t.Name + "[shape = box]"); 
-        }
+		public void Node(Node n)
+		{
+			this._graphContent.Add(n.Name + "[shape = box]");
+		}
 
-        public void Link(IntrospectedType t1, IntrospectedType t2, LinkRelationship relationship)
-        {
-            this._graphContent.Add(String.Format("{0} -> {1};", t1.Name, t2.Name));
-        }
+		public void Edge(Edge e)
+		{
+			this._graphContent.Add(String.Format("{0} -> {1};", e.From, e.To));
+		}
     }
 }

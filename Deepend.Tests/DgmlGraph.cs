@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using System.Linq;
 
 namespace Deepend.Tests
 {
@@ -38,9 +39,10 @@ namespace Deepend.Tests
 				t.Name = "StringBuilder";
 				t.Namespace = "System.Text";
 
-				graph.Declare(t);
+				//t.Generate().ToList().ForEach(x => x.WriteTo(writer));
+				//graph.Declare(t);
 
-				graph.SaveTo(writer);
+				//graph.SaveTo(writer);
 
 				string document = writer.ToString();
 
@@ -61,7 +63,7 @@ namespace Deepend.Tests
 				t.Name = "MyClass";
 				t.Namespace = "MyNamespace";
 
-				graph.Declare(t);
+//				graph.Declare(t);
 
 				graph.SaveTo(writer);
 
@@ -84,7 +86,7 @@ namespace Deepend.Tests
 				t.Name = "<MyClass";
 				t.Namespace = "MyNamespace";
 
-				graph.Declare(t);
+				//graph.Declare(t);
 
 				graph.SaveTo(writer);
 
@@ -105,7 +107,7 @@ namespace Deepend.Tests
 				t.Name = "&MyClass";
 				t.Namespace = "MyNamespace";
 
-				graph.Declare(t);
+				//graph.Declare(t);
 
 				graph.SaveTo(writer);
 
@@ -130,10 +132,10 @@ namespace Deepend.Tests
 				dependsOnThisClass.Name = "&MyOtherClass";
 				dependsOnThisClass.Namespace = "MyNamespace";
 
-				graph.Declare(thisClass);
-				graph.Declare(dependsOnThisClass);
+				//graph.Declare(thisClass);
+				//graph.Declare(dependsOnThisClass);
 
-				graph.Link(thisClass, dependsOnThisClass, LinkRelationship.Dependency);
+				//graph.Link(thisClass, dependsOnThisClass, LinkRelationship.Dependency);
 
 				graph.SaveTo(writer);
 
@@ -160,9 +162,9 @@ namespace Deepend.Tests
 				superClass.Name = "&MyOtherClass";
 				superClass.Namespace = "MyNamespace";
 
-				graph.Declare(subClass);
-				graph.Declare(superClass);
-				graph.Link(subClass, superClass, LinkRelationship.Inheritance);
+				//graph.Declare(subClass);
+				//graph.Declare(superClass);
+				//graph.Link(subClass, superClass, LinkRelationship.Inheritance);
 
 				graph.SaveTo(writer);
 
@@ -189,9 +191,9 @@ namespace Deepend.Tests
 				interfaceType.Name = "&MyOtherClass";
 				interfaceType.Namespace = "MyNamespace";
 
-				graph.Declare(concreteType);
-				graph.Declare(interfaceType);
-				graph.Link(concreteType, interfaceType, LinkRelationship.Interface);
+				//graph.Declare(concreteType);
+				//graph.Declare(interfaceType);
+				//graph.Link(concreteType, interfaceType, LinkRelationship.Interface);
 
 				graph.SaveTo(writer);
 

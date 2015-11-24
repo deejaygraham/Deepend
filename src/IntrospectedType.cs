@@ -73,49 +73,105 @@ namespace Deepend
 
 		private List<string> Implements { get; set; }
 
-        public void WriteSelf(IGraphDependencies dependencies)
-        {
-            if (this.Name.StartsWith("<"))
-                return;
+		public IEnumerable<IGraphable> Generate(TypeInventory ti)
+		{
+			var list = new List<IGraphable>();
 
-            dependencies.Declare(this);
-        }
+			if (this.Name.StartsWith("<"))
+				return list;
 
-        public void WriteRelationships(IGraphDependencies dependencies, TypeInventory ti)
-        {
-            if (this.Name.StartsWith("<"))
-                return;
+			string t1Name = this.Name;
 
-            // don't link to self.
+			if (this.Namespace.StartsWith("System") || this.Namespace.StartsWith("Microsoft"))
+				t1Name = this.Namespace + "." + this.Name;
 
-            // derives from
-            if (!String.IsNullOrEmpty(this.DerivesFrom))
-            {
-				Link(this.DerivesFrom, dependencies, ti, LinkRelationship.Inheritance);
-            }
+			t1Name = t1Name.Replace("&", "");
 
-            Link(this.Implements, dependencies, ti, LinkRelationship.Interface);
-            Link(this.TalksTo, dependencies, ti, LinkRelationship.Dependency);
-			Link(this.Creates, dependencies, ti, LinkRelationship.Dependency);
-        }
+			var thisType = new Node
+			{
+				Id = Node.SuggestTypeId(t1Name),
+				Name = t1Name
+			};
 
-        private void Link(IEnumerable<string> types, IGraphDependencies dependencies, TypeInventory ti, LinkRelationship relationship)
-        {
-            foreach (var typeName in types)
-            {
-				Link(typeName, dependencies, ti, relationship);
-            }
-        }
+			var thisNamespace = new Node
+			{
+				Id = Node.SuggestNamespaceId(this.Namespace),
+				Name = this.Namespace,
+				Group = true
+			};
 
-		private void Link(string typeName, IGraphDependencies dependencies, TypeInventory ti, LinkRelationship relationship)
-        {
-            try
-            {
-				dependencies.Link(this, ti[typeName], relationship);
-            }
-            catch (KeyNotFoundException)
-            {
-            }
-        }
+			var namespaceContainsType = new Edge
+			{
+				From = thisNamespace.Id,
+				To = thisType.Id,
+				Group = true
+			};
+
+			list.Add(thisType);
+			list.Add(thisNamespace);
+			list.Add(namespaceContainsType);
+
+			// make sure names are valid...
+			// namespaces exist
+			// 
+			// look at links...
+			if (!String.IsNullOrEmpty(this.DerivesFrom))
+			{
+				var t = ti[this.DerivesFrom];
+
+				var derivesFromType = new Edge
+				{
+					From = Node.SuggestTypeId(t.Name),
+					To = thisType.Id,
+					Description = "Inherits from"
+				};
+
+				list.Add(derivesFromType);
+			}
+
+			foreach (var implements in this.Implements)
+			{
+				var t = ti[implements];
+
+				var implementsInterface = new Edge
+				{
+					From = Node.SuggestTypeId(t.Name),
+					To = thisType.Id,
+					Description = "Implements"
+				};
+
+				list.Add(implementsInterface);
+			}
+
+			foreach (var talksTo in this.TalksTo)
+			{
+				var t = ti[talksTo];
+
+				var talksToType = new Edge
+				{
+					From = Node.SuggestTypeId(t.Name),
+					To = thisType.Id,
+					Description = "Talks To"
+				};
+
+				list.Add(talksToType);
+			}
+
+			foreach (var creates in this.Creates)
+			{
+				var t = ti[creates];
+
+				var createsType = new Edge
+				{
+					From = Node.SuggestTypeId(t.Name),
+					To = thisType.Id,
+					Description = "&lt;&lt;new&gt;&gt;"
+				};
+
+				list.Add(createsType);
+			}
+
+			return list;
+		}
     }
 }

@@ -39,21 +39,18 @@ namespace Deepend
             }
         }
 
-        public void Generate(IGraphDependencies dependencies)
-        {
-            foreach (var t in this._types.Keys)
-            {
-                IntrospectedType it = this._types[t];
+		public IEnumerable<IGraphable> Generate()
+		{
+			var list = new List<IGraphable>();
 
-                it.WriteSelf(dependencies);
-            }
+			foreach (var t in this._types.Keys)
+			{
+				IntrospectedType it = this._types[t];
 
-            foreach(var t in this._types.Keys)
-            {
-                IntrospectedType it = this._types[t];
+				list.AddRange(it.Generate(this));
+			}
 
-                it.WriteRelationships(dependencies, this);
-            }
-        }
+			return list;
+		}
     }
 }

@@ -87,62 +87,14 @@ namespace Deepend
 
 			var thisType = new TypeNode(this);
 
-//			list.Add(thisType);
-			
-			//if (!String.IsNullOrEmpty(this.Namespace))
-			//{
-			//	// most specific namespace
-			//	var thisNamespace = new GroupNode(Node.SuggestNamespaceId(this.Namespace), this.Namespace);
-			//	// I am in this namespace...
-			//	list.Add(new GroupingRelationship(thisNamespace, thisType));
-
-			//	string childNamespace = this.Namespace;
-			//	string parentNamespace = childNamespace.ParentNamespaceOf();
-
-			//	while (!String.IsNullOrEmpty(parentNamespace))
-			//	{
-			//		var childGroup = new GroupNode(Node.SuggestNamespaceId(childNamespace), childNamespace);
-			//		list.Add(childGroup);
-
-			//		var parentGroup = new GroupNode(Node.SuggestNamespaceId(parentNamespace), parentNamespace);
-			//		list.Add(parentGroup);
-
-			//		list.Add(new GroupingRelationship(parentGroup, childGroup));
-
-			//		childNamespace = parentNamespace;
-			//		parentNamespace = childNamespace.ParentNamespaceOf();
-			//	}
-			//}
-
 			if (!String.IsNullOrEmpty(this.DerivesFrom))
 			{
 				list.Add(new InheritanceRelationship(tni[this.DerivesFrom], thisType));
 			}
 
 			this.Implements.ForEach(i => list.Add(new ImplementationRelationship(tni[i], thisType)));
-
-			//foreach (var implements in this.Implements)
-			//{
-			//	var t = tni[implements];
-
-			//	list.Add(new ImplementationRelationship(t, thisType));
-			//}
-
 			this.TalksTo.ForEach(t => list.Add(new InteractionRelationship(tni[t], thisType)));
-			//foreach (var talksTo in this.TalksTo)
-			//{
-			//	var t = tni[talksTo];
-
-			//	list.Add(new InteractionRelationship(t, thisType));
-			//}
-
 			this.Creates.ForEach(c => list.Add(new CreatesRelationship(tni[c], thisType)));
-			//foreach (var creates in this.Creates)
-			//{
-			//	var t = tni[creates];
-
-			//	list.Add(new CreatesRelationship(t, thisType));
-			//}
 
 			return list;
 		}

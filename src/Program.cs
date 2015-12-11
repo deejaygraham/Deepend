@@ -43,10 +43,7 @@ namespace Deepend
 				}
 
 				// default command
-				ISupportedCommand command = new AnalyseFullAssembly
-					{
-						AssemblyName = assemblyPath
-					};
+				ISupportedCommand command = null;
 
 				if (analyseReferences)
 				{
@@ -56,21 +53,24 @@ namespace Deepend
 						Depth = recursive ? ReferenceDepth.Recursive : ReferenceDepth.TopLevelOnly
 					};
 				}
-				else if (!String.IsNullOrEmpty(specificType))
+				else
 				{
-					command = new AnalyseType
+					AnalyseAssemblyTypes typeAnalysis = new AnalyseAssemblyTypes
 					{
-						AssemblyName = assemblyPath,
-						TypeName = specificType
+						AssemblyName = assemblyPath
 					};
-				}
-				else if (!String.IsNullOrEmpty(specificNamespace))
-				{
-					command = new AnalyseNamespace
+					
+					if (!String.IsNullOrEmpty(specificType))
 					{
-						AssemblyName = assemblyPath,
-						Namespace = specificNamespace
-					};
+						typeAnalysis.Filters.Add(new TypeSpecificFilter(specificType));
+					}
+
+					if (!String.IsNullOrEmpty(specificNamespace))
+					{
+						typeAnalysis.Filters.Add(new NamespaceSpecificFilter(specificNamespace));
+					}
+
+					command = typeAnalysis;
 				}
 
 				IGraphDependencies dg = null;

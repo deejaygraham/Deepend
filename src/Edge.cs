@@ -17,6 +17,8 @@ namespace Deepend
 
 		public string Description { get; set; }
 
+		public string Colour { get; set; }
+
 		public bool Group { get; set; }
 
 		public bool DotLine { get; set; }
@@ -30,5 +32,33 @@ namespace Deepend
 		{
 			return string.Format("{0} -> {1}", this.From, this.To);
 		}
+
+		public static string SuggestColour(string name)
+		{
+			string colour = string.Empty;
+
+			if (name.Contains("Inherits"))
+			{
+				// red
+				colour = "#FFcccc";
+			}
+			else if (name.Contains("Implements"))
+			{
+				// gray
+				colour = "#D4D4D4";
+			}
+			else if (name.Contains("Talks"))
+			{
+				// blue-ish
+				colour = "#00BCF2";
+			}
+			else if (name.Contains("new"))
+			{
+				colour = "#009900";
+			}
+
+			return colour;
+		}
+
 	}
 }

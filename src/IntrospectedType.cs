@@ -9,13 +9,14 @@ namespace Deepend
 {
     public class IntrospectedType
     {
-
         public IntrospectedType()
         {
             this.TalksTo = new List<string>();
             this.Creates = new List<string>();
             this.Implements = new List<string>();
         }
+
+		public string FullName { get; set; }
 
         public string Name { get; set; }
 
@@ -73,105 +74,95 @@ namespace Deepend
 
 		private List<string> Implements { get; set; }
 
-		public IEnumerable<IGraphable> Generate(TypeInventory ti)
+		public IEnumerable<IGraphable> Generate(TypeNameInventory tni)
 		{
-			var list = new List<IGraphable>();
+			var list = new HashSet<IGraphable>();
 
 			if (this.Name.StartsWith("<"))
 				return list;
 
-			string t1Name = this.Name;
+			TypeName thisTypeName = tni[this.FullName];
 
-			if (this.Namespace.StartsWith("System") || this.Namespace.StartsWith("Microsoft"))
-				t1Name = this.Namespace + "." + this.Name;
+			thisTypeName.Generate().ToList().ForEach(g => list.Add(g));
 
-			t1Name = t1Name.Replace("&", "");
+			var thisType = new TypeNode(this);
 
-			var thisType = new Node
-			{
-				Id = Node.SuggestTypeId(t1Name),
-				Name = t1Name
-			};
+//			list.Add(thisType);
+			
+			//if (!String.IsNullOrEmpty(this.Namespace))
+			//{
+			//	// most specific namespace
+			//	var thisNamespace = new GroupNode(Node.SuggestNamespaceId(this.Namespace), this.Namespace);
+			//	// I am in this namespace...
+			//	list.Add(new GroupingRelationship(thisNamespace, thisType));
 
-			var thisNamespace = new Node
-			{
-				Id = Node.SuggestNamespaceId(this.Namespace),
-				Name = this.Namespace,
-				Group = true
-			};
+			//	string childNamespace = this.Namespace;
+			//	string parentNamespace = childNamespace.ParentNamespaceOf();
 
-			var namespaceContainsType = new Edge
-			{
-				From = thisNamespace.Id,
-				To = thisType.Id,
-				Group = true
-			};
+			//	while (!String.IsNullOrEmpty(parentNamespace))
+			//	{
+			//		var childGroup = new GroupNode(Node.SuggestNamespaceId(childNamespace), childNamespace);
+			//		list.Add(childGroup);
 
-			list.Add(thisType);
-			list.Add(thisNamespace);
-			list.Add(namespaceContainsType);
+			//		var parentGroup = new GroupNode(Node.SuggestNamespaceId(parentNamespace), parentNamespace);
+			//		list.Add(parentGroup);
 
-			// make sure names are valid...
-			// namespaces exist
-			// 
-			// look at links...
+			//		list.Add(new GroupingRelationship(parentGroup, childGroup));
+
+			//		childNamespace = parentNamespace;
+			//		parentNamespace = childNamespace.ParentNamespaceOf();
+			//	}
+			//}
+
 			if (!String.IsNullOrEmpty(this.DerivesFrom))
 			{
-				var t = ti[this.DerivesFrom];
-
-				var derivesFromType = new Edge
-				{
-					From = Node.SuggestTypeId(t.Name),
-					To = thisType.Id,
-					Description = "Inherits from"
-				};
-
-				list.Add(derivesFromType);
+				list.Add(new InheritanceRelationship(tni[this.DerivesFrom], thisType));
 			}
 
-			foreach (var implements in this.Implements)
-			{
-				var t = ti[implements];
+			this.Implements.ForEach(i => list.Add(new ImplementationRelationship(tni[i], thisType)));
 
-				var implementsInterface = new Edge
-				{
-					From = Node.SuggestTypeId(t.Name),
-					To = thisType.Id,
-					Description = "Implements"
-				};
+			//foreach (var implements in this.Implements)
+			//{
+			//	var t = tni[implements];
 
-				list.Add(implementsInterface);
-			}
+			//	list.Add(new ImplementationRelationship(t, thisType));
+			//}
 
-			foreach (var talksTo in this.TalksTo)
-			{
-				var t = ti[talksTo];
+			this.TalksTo.ForEach(t => list.Add(new InteractionRelationship(tni[t], thisType)));
+			//foreach (var talksTo in this.TalksTo)
+			//{
+			//	var t = tni[talksTo];
 
-				var talksToType = new Edge
-				{
-					From = Node.SuggestTypeId(t.Name),
-					To = thisType.Id,
-					Description = "Talks To"
-				};
+			//	list.Add(new InteractionRelationship(t, thisType));
+			//}
 
-				list.Add(talksToType);
-			}
+			this.Creates.ForEach(c => list.Add(new CreatesRelationship(tni[c], thisType)));
+			//foreach (var creates in this.Creates)
+			//{
+			//	var t = tni[creates];
 
-			foreach (var creates in this.Creates)
-			{
-				var t = ti[creates];
-
-				var createsType = new Edge
-				{
-					From = Node.SuggestTypeId(t.Name),
-					To = thisType.Id,
-					Description = "&lt;&lt;new&gt;&gt;"
-				};
-
-				list.Add(createsType);
-			}
+			//	list.Add(new CreatesRelationship(t, thisType));
+			//}
 
 			return list;
 		}
     }
+
+	public static class StringExtensions
+	{
+		public static string ParentNamespaceOf(this string namesp)
+		{
+			string parent = string.Empty;
+
+			const char Dot = '.';
+
+			if (namesp.Contains(Dot))
+			{
+				int index = namesp.LastIndexOf(Dot);
+				parent = namesp.Substring(0, index);
+			}
+
+			return parent;
+		}
+	}
 }

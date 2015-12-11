@@ -7,6 +7,17 @@ namespace Deepend
     {
         private SortedDictionary<string, IntrospectedType> _types = new SortedDictionary<string, IntrospectedType>();
 
+		public bool Contains(string fullName)
+		{
+			return this._types.ContainsKey(fullName);
+		}
+		
+		public void Add(IntrospectedType t)
+		{
+			if (!Contains(t.FullName))
+				this._types.Add(t.FullName, t);
+		}
+
         public IntrospectedType this[TypeReference index]
         {
             get
@@ -31,15 +42,15 @@ namespace Deepend
             }
         }
 
-        public IntrospectedType this[string fullName]
-        {
-            get
-            {
-                return this._types[fullName];
-            }
-        }
+		public IntrospectedType this[string fullName]
+		{
+			get
+			{
+				return this._types[fullName];
+			}
+		}
 
-		public IEnumerable<IGraphable> Generate()
+		public IEnumerable<IGraphable> Generate(TypeNameInventory tni)
 		{
 			var list = new List<IGraphable>();
 
@@ -47,7 +58,7 @@ namespace Deepend
 			{
 				IntrospectedType it = this._types[t];
 
-				list.AddRange(it.Generate(this));
+				list.AddRange(it.Generate(tni));
 			}
 
 			return list;

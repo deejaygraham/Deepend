@@ -27,12 +27,7 @@ namespace Deepend
 
 			var list = new HashSet<IGraphable>();
 
-			var globalAssemblyCache = new Node
-			{
-				Id = "GAC",
-				Name = "Global Assembly Cache",
-				Group = true
-			};
+			var globalAssemblyCache = new GroupNode("GAC", "Global Assembly Cache");
 
 			list.Add(globalAssemblyCache);
 

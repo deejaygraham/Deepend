@@ -13,7 +13,7 @@ namespace Deepend
         public void SaveTo(TextWriter writer)
         {
             writer.WriteLine("<?xml version=\'1.0\' encoding=\'utf-8\'?>");
-            writer.WriteLine("<DirectedGraph xmlns=\'http://schemas.microsoft.com/vs/2009/dgml\'>");
+			writer.WriteLine("<DirectedGraph xmlns=\'http://schemas.microsoft.com/vs/2009/dgml\' GraphDirection=\"LeftToRight\">");
 
             writer.WriteLine("\t<Nodes>");
 
@@ -33,6 +33,19 @@ namespace Deepend
 
             writer.WriteLine("\t</Links>");
 
+			writer.WriteLine("\t<Styles>");
+			writer.WriteLine("\t\t<Style TargetType=\"Node\">");
+			writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"Consolas\" />");
+			writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"12\" />");
+			writer.WriteLine("\t\t\t<Setter Property=\"Background\" Value=\"White\" />");
+			writer.WriteLine("\t\t\t<Setter Property=\"NodeRadius\" Value=\"3\" />");
+			writer.WriteLine("\t\t</Style>");
+			writer.WriteLine("\t\t<Style TargetType=\"Link\">");
+			writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"Consolas\" />");
+			writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"12\" />");
+			writer.WriteLine("\t\t</Style>");
+			writer.WriteLine("\t</Styles>");
+
             writer.WriteLine("</DirectedGraph>");
         }
 
@@ -40,11 +53,19 @@ namespace Deepend
 		{
 			var builder = new StringBuilder();
 
+			if (n.Name.StartsWith("N_") || String.IsNullOrEmpty(n.Name))
+			{
+
+			
+			}
+
 			builder.AppendFormat("<Node Id=\"{0}\" Label=\"{1}\" ", n.Id, n.Name);
 
 			if (n.Group)
 			{
-				builder.Append("Group=\"Expanded\" ");
+				string state = n.Expand ? "Expanded" : "Collapsed";
+
+				builder.AppendFormat("Group=\"{0}\" ", state);
 			}
 
 			if (!String.IsNullOrEmpty(n.Colour))
@@ -52,7 +73,7 @@ namespace Deepend
 				builder.AppendFormat("Background=\"{0}\" ", n.Colour);
 			}
 
-			builder.AppendLine(" />");
+			builder.Append(" />");
 
 			this._nodes.Add(builder.ToString());
 		}
@@ -73,12 +94,17 @@ namespace Deepend
 				builder.AppendFormat("Label=\"{0}\" ", e.Description);
 			}
 
+			if (!String.IsNullOrEmpty(e.Colour))
+			{
+				builder.AppendFormat("Stroke=\"{0}\" ", e.Colour);
+			}
+
 			if (e.DotLine)
 			{
 				builder.Append("StrokeDashArray=\"1,3\" ");
 			}
 
-			builder.AppendLine(" />");
+			builder.Append(" />");
 
 			this._links.Add(builder.ToString());
 		}

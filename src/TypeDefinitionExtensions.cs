@@ -6,37 +6,45 @@ namespace Deepend
 {
     public static class TypeDefinitionExtensions
     {
-        public static void DiscoverInheritance(this TypeDefinition td, IntrospectedType it, TypeInventory ti)
+		public static bool HasSuperClass(this TypeDefinition discovered)
+		{
+			const string BaseObjectName = "System.Object";
+
+			return discovered.BaseType != null && discovered.BaseType.FullName != BaseObjectName;
+		}
+
+		public static void DiscoverInheritance(this TypeDefinition td, IntrospectedType it, TypeNameInventory tni)
         {
             if (td.HasInterfaces)
             {
                 foreach (var intf in td.Interfaces)
                 {
-                    IntrospectedType iImpl = ti[intf];
+					tni.Add(intf.ToTypeName());
                     it.Implementing(intf);
                 }
             }
 
-            if (td.BaseType != null)
+            if (td.HasSuperClass())
             {
-                IntrospectedType iBase = ti[td.BaseType];
+				tni.Add(td.BaseType.ToTypeName());
                 it.DerivingFrom(td.BaseType);
             }
         }
 
-        public static void DiscoverProperties(this TypeDefinition td, IntrospectedType it, TypeInventory ti)
+		public static void DiscoverProperties(this TypeDefinition td, IntrospectedType it, TypeNameInventory tni)
         {
             if (td.HasProperties)
             {
                 foreach (var prop in td.Properties)
                 {
-                    IntrospectedType iProp = ti[prop.PropertyType];
+					tni.Add(prop.PropertyType.ToTypeName());
+
                     it.TalkingTo(prop.PropertyType);
                 }
             }
         }
 
-        public static void DiscoverMethods(this TypeDefinition td, IntrospectedType it, TypeInventory ti)
+		public static void DiscoverMethods(this TypeDefinition td, IntrospectedType it, TypeNameInventory tni)
         {
             if (td.HasMethods)
             {
@@ -48,7 +56,8 @@ namespace Deepend
                     {
                         foreach (var par in meth.Parameters)
                         {
-                            IntrospectedType iParam = ti[par.ParameterType];
+							tni.Add(par.ParameterType.ToTypeName());
+
                             it.TalkingTo(par.ParameterType);
                         }
                     }
@@ -68,23 +77,22 @@ namespace Deepend
 
                             if (methodReference != null)
                             {
-                                IntrospectedType iNewObj = ti[methodReference.DeclaringType];
+								tni.Add(methodReference.DeclaringType.ToTypeName());
                                 it.Creating(methodReference.DeclaringType);
                             }
                         }
                     }
                 }
             }
-
         }
 
-        public static void DiscoverFields(this TypeDefinition td, IntrospectedType it, TypeInventory ti)
+		public static void DiscoverFields(this TypeDefinition td, IntrospectedType it, TypeNameInventory tni)
         {
             if (td.HasFields)
             {
                 foreach (var field in td.Fields.Where(f => !f.IsPrivate && f.FieldType.ShouldBeIncluded()))
                 {
-                    IntrospectedType ifield = ti[field.FieldType];
+					tni.Add(field.FieldType.ToTypeName());
 
                     it.TalkingTo(field.FieldType);
                 }

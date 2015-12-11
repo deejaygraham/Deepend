@@ -4,14 +4,21 @@ namespace Deepend
 {
     public class IntrospectedTypeFactory
     {
-        public void CreateFrom(TypeDefinition td, TypeInventory ti)
+		public IntrospectedType CreateFrom(TypeDefinition td, TypeNameInventory tni)
         {
-            IntrospectedType it = ti[td];
+			IntrospectedType it = new IntrospectedType
+			{
+				Name = td.Name,
+				Namespace = td.Namespace,
+				FullName = td.FullName
+			};
 
-            td.DiscoverInheritance(it, ti);
-            td.DiscoverFields(it, ti);
-            td.DiscoverProperties(it, ti);
-            td.DiscoverMethods(it, ti);
+            td.DiscoverInheritance(it, tni);
+            td.DiscoverFields(it, tni);
+            td.DiscoverProperties(it, tni);
+            td.DiscoverMethods(it, tni);
+
+			return it;
         }
     }
 }

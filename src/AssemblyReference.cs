@@ -91,12 +91,7 @@ namespace Deepend
 		{
 			var list = new HashSet<IGraphable>();
 
-			var thisAssembly = new Node
-			{
-				Id = Node.SuggestAssemblyId(this.Name),
-				Name = string.Format("{0} {1}", this.Name, this.Version),
-				Colour = Node.SuggestColour(this.Name)
-			};
+			var thisAssembly = new ReferenceNode(this);
 
 			list.Add(thisAssembly);
 
@@ -105,12 +100,7 @@ namespace Deepend
 
 			foreach (var r in this.References)
 			{
-				var refAssembly = new Node
-				{
-					Id = Node.SuggestAssemblyId(r.Name),
-					Name = string.Format("{0} {1}", r.Name, r.Version),
-					Colour = Node.SuggestColour(r.Name)
-				};
+				var refAssembly = new ReferenceNode(r);
 
 				list.Add(refAssembly);
 

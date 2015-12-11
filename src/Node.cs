@@ -14,6 +14,7 @@ namespace Deepend
 		public Node()
 		{
 			this.Id = Guid.NewGuid().ToString();
+			this.Expand = false;
 		}
 
 		public string Id { get; set; }
@@ -22,18 +23,20 @@ namespace Deepend
 
 		public bool Group { get; set; }
 
+		public bool Expand { get; set; }
+
 		public string Colour { get; set; }
 
 		public static string SuggestTypeId(string name)
 		{
-			return string.Format("CLS_{0}", name);
-//			return string.Format("T_{0}", name.Replace('.', '_'));
+			//return string.Format("CLS_{0}", name);
+			return string.Format("T_{0}", name.Replace('.', '_'));
 		}
 
 		public static string SuggestNamespaceId(string name)
 		{
-			return string.Format("NS_{0}", name);
-//			return string.Format("N_{0}", name.Replace('.', '_'));
+//			return string.Format("NS_{0}", name);
+			return string.Format("N_{0}", name.Replace('.', '_'));
 		}
 
 		public static string SuggestAssemblyId(string name)

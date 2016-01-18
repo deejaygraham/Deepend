@@ -25,18 +25,18 @@ namespace Deepend
 				var options = new OptionSet() {
 					{ "a|assembly=", "Path to assembly", v => assemblyPath = v },
 					{ "t|type=", "Analyse Specific Type", v => specificType = v },
-					{ "ns|namespace=", "Analyse Specific Namespace", v => specificNamespace = v },
+					{ "n|namespace=", "Analyse Specific Namespace", v => specificNamespace = v },
 					{ "r|refs", "Analyse References Only", v => analyseReferences = true },
-					{ "recursive", "Recursively Analyse References", v => recursive = true },
+					{ "rr|recursive", "Recursively Analyse References", v => recursive = true },
 					{ "o|output=", "Output Path", v => outputPath = v },
 					{ "dot", "Output as .dot file", v => outputAsDot = true },
 					{ "dgml", "Output as .dgml file", v => outputAsDgml = true },
-					{"?|help", "Show Help", v => showHelp = v != null }
+					{"?|help", "Show this help", v => showHelp = v != null }
 				};
 			
 				options.Parse(args);
 
-				if (showHelp)
+				if (args.Length == 0 || showHelp)
 				{
 					ShowHelp(options);
 					return 0;

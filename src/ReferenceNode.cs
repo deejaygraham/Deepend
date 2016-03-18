@@ -11,7 +11,11 @@ namespace Deepend
 		public ReferenceNode(AssemblyReference ar)
 		{
 			this.Id = Node.SuggestAssemblyId(ar.Name);
-			this.Name = string.Format("{0} {1}", ar.Name, ar.Version);
+
+			if (string.IsNullOrEmpty(ar.Runtime))
+				this.Name = string.Format("{0} {1}", ar.Name, ar.Version);
+			else
+				this.Name = string.Format("{0} {1} ({2})", ar.Name, ar.Version, ar.Runtime);
 			this.Colour = Node.SuggestColour(ar.Name);
 		}
 	}

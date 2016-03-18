@@ -19,6 +19,8 @@ namespace Deepend
 
 		public string Version { get; set; }
 
+		public string Runtime { get; set; }
+
 		public AssemblyLocation Location { get; set; }
 
 		public List<AssemblyReference> References { get; set; }
@@ -33,11 +35,13 @@ namespace Deepend
 			{ 
 				Name = assemblyContent.Name.Name, 
 				Version = assemblyContent.Name.Version.ToString(),
- 				Location = AssemblyLocation.Local
+ 				Location = AssemblyLocation.Local,
+				Runtime = assemblyContent.MainModule.Runtime.ToString()
 			};
 
 			if (depth == ReferenceDepth.TopLevelOnly && level >= 1)
 				return ar;
+
 
 			var refList = assemblyContent.MainModule.AssemblyReferences;
 

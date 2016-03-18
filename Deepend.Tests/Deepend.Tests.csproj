@@ -45,7 +45,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -54,6 +56,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Deepend.Core\Deepend.Core.csproj">
+      <Project>{9a266756-71fc-4b93-a414-429241f12500}</Project>
+      <Name>Deepend.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\src\Deepend.csproj">
       <Project>{60bfab11-202e-4f20-9688-d54e212ddd80}</Project>
       <Name>Deepend</Name>

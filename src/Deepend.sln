@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deepend", "Deepend.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deepend.Tests", "..\Deepend.Tests\Deepend.Tests.csproj", "{7EE0CC7C-29E9-4B3A-AD47-2FA3E29644FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deepend.Core", "..\Deepend.Core\Deepend.Core.csproj", "{9A266756-71FC-4B93-A414-429241F12500}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{7EE0CC7C-29E9-4B3A-AD47-2FA3E29644FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EE0CC7C-29E9-4B3A-AD47-2FA3E29644FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EE0CC7C-29E9-4B3A-AD47-2FA3E29644FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A266756-71FC-4B93-A414-429241F12500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A266756-71FC-4B93-A414-429241F12500}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A266756-71FC-4B93-A414-429241F12500}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A266756-71FC-4B93-A414-429241F12500}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

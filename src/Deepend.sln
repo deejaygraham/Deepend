@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deepend", "Deepend.csproj", "{60BFAB11-202E-4F20-9688-D54E212DDD80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deepend.Tests", "..\Deepend.Tests\Deepend.Tests.csproj", "{7EE0CC7C-29E9-4B3A-AD47-2FA3E29644FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deepend.Core", "..\Deepend.Core\Deepend.Core.csproj", "{70B86015-F1D8-46C9-B5AB-B2483AC4CACD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deepend.Cecil", "..\Deepend.Cecil\Deepend.Cecil.csproj", "{292A6816-B0A1-4B0C-A1E6-2F1D8F71E0A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{7EE0CC7C-29E9-4B3A-AD47-2FA3E29644FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EE0CC7C-29E9-4B3A-AD47-2FA3E29644FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EE0CC7C-29E9-4B3A-AD47-2FA3E29644FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B86015-F1D8-46C9-B5AB-B2483AC4CACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B86015-F1D8-46C9-B5AB-B2483AC4CACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B86015-F1D8-46C9-B5AB-B2483AC4CACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B86015-F1D8-46C9-B5AB-B2483AC4CACD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{292A6816-B0A1-4B0C-A1E6-2F1D8F71E0A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{292A6816-B0A1-4B0C-A1E6-2F1D8F71E0A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{292A6816-B0A1-4B0C-A1E6-2F1D8F71E0A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{292A6816-B0A1-4B0C-A1E6-2F1D8F71E0A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

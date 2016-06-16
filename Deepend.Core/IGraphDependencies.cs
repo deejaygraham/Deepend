@@ -8,5 +8,7 @@ namespace Deepend
 		void Edge(Edge e);
 
         void SaveTo(TextWriter writer);
+
+		
     }
 }

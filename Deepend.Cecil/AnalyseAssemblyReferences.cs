@@ -22,7 +22,7 @@ namespace Deepend
 
 			var assemblyList = new List<string>();
 
-			var ar = AssemblyReference.Load(this.AssemblyName, this.Depth, 0, assemblyList);
+			var ar = AssemblyReferenceBuilder.Load(this.AssemblyName, this.Depth, 0, assemblyList);
 
 			var list = new HashSet<IGraphable>();
 

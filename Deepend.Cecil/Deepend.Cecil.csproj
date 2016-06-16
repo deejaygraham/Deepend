@@ -59,6 +59,7 @@
     <Compile Include="AnalyseAssemblyReferences.cs" />
     <Compile Include="AnalyseAssemblyTypes.cs" />
     <Compile Include="AssemblyReference.cs" />
+    <Compile Include="AssemblyReferenceBuilder.cs" />
     <Compile Include="CreatesRelationship.cs" />
     <Compile Include="GeneratedTypeFilter.cs" />
     <Compile Include="GroupingRelationship.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="ISupportedCommand.cs" />
     <Compile Include="ModuleFilter.cs" />
     <Compile Include="NamespaceSpecificFilter.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceNode.cs" />
     <Compile Include="TypeDefinitionExtensions.cs" />

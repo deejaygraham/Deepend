@@ -157,18 +157,9 @@ namespace Deepend
 		}
 	}
 
-	public enum AssemblyLocation
-	{
-		Unknown,
-		Local,
-		GlobalAssemblyCache
-	}
+
 	
-	public enum ReferenceDepth
-	{
-		TopLevelOnly,
-		Recursive
-	}
+
 
 	internal class GacApi
 	{

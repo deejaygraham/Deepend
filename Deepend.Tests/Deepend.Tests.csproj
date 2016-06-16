@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Deepend.Tests</RootNamespace>
     <AssemblyName>Deepend.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +57,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Deepend.Cecil\Deepend.Cecil.csproj">
+      <Project>{292a6816-b0a1-4b0c-a1e6-2f1d8f71e0a4}</Project>
+      <Name>Deepend.Cecil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Deepend.Core\Deepend.Core.csproj">
+      <Project>{70b86015-f1d8-46c9-b5ab-b2483ac4cacd}</Project>
+      <Name>Deepend.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\src\Deepend.csproj">
       <Project>{60bfab11-202e-4f20-9688-d54e212ddd80}</Project>
       <Name>Deepend</Name>

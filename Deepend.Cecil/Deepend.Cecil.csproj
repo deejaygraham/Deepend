@@ -60,6 +60,7 @@
     <Compile Include="AnalyseAssemblyTypes.cs" />
     <Compile Include="AssemblyReference.cs" />
     <Compile Include="AssemblyReferenceBuilder.cs" />
+    <Compile Include="CecilExtensionMethods.cs" />
     <Compile Include="CreatesRelationship.cs" />
     <Compile Include="GeneratedTypeFilter.cs" />
     <Compile Include="GroupingRelationship.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="TypeInventory.cs" />
     <Compile Include="TypeName.cs" />
     <Compile Include="TypeNode.cs" />
+    <Compile Include="TypeReferenceBuilder.cs" />
     <Compile Include="TypeReferenceExtensions.cs" />
     <Compile Include="TypeSpecificFilter.cs" />
   </ItemGroup>

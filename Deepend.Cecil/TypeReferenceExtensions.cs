@@ -6,10 +6,10 @@ namespace Deepend
 {
     public static class TypeReferenceExtensions
     {
-		public static TypeName ToTypeName(this TypeReference type)
-		{
-			return new TypeName(type.FriendlyName());
-		}
+		//public static TypeName ToTypeName(this TypeReference type)
+		//{
+		//	return new TypeName(type.FriendlyName());
+		//}
 
         public static bool ShouldBeIncluded(this TypeReference type)
         {
@@ -35,138 +35,138 @@ namespace Deepend
                 || type.Namespace.StartsWith("Microsoft.ManagementConsole");
         }
 
-        public static bool IsPrimitive(this TypeReference type)
-        {
-            return type.Name == "Void"
-                || type.Name == "Byte"
-                || type.Name == "Byte[]"
-                || type.Name == "Object"
-                || type.Name == "Type"
-                || type.Name == "TimeSpan" // may be useful to see these.
-                || type.Name == "DateTime"
-                || type.Name == "EventArgs"
-                || type.Name.EndsWith("Exception")
-                || type.Name.EndsWith("EventArgs")
-                || type.Name.EndsWith("EventHandler")
-                || type.Name == "Regex"
-                || type.Name == "IntPtr"
-                || type.Name == "Point"
-                || type.Name == "Size"
-                || type.Name == "SizeF"
-                || type.Name == "Font"
-                    || type.Name == "Boolean"
-                    || type.Name == "String"
-                    || type.Name == "String[]"
-                    || type.Name == "String&"
-                    || type.Name == "Int16"
-                    || type.Name == "Int32"
-                    || type.Name == "Int64"
-                    || type.Name == "Double"
-                    || type.Name == "Float"
-                    || type.Name == "Guid"
-                    || type.Name.Contains("AnonymousType")
-                    ;
-        }
+		//public static bool IsPrimitive(this TypeReference type)
+		//{
+		//	return type.Name == "Void"
+		//		|| type.Name == "Byte"
+		//		|| type.Name == "Byte[]"
+		//		|| type.Name == "Object"
+		//		|| type.Name == "Type"
+		//		|| type.Name == "TimeSpan" // may be useful to see these.
+		//		|| type.Name == "DateTime"
+		//		|| type.Name == "EventArgs"
+		//		|| type.Name.EndsWith("Exception")
+		//		|| type.Name.EndsWith("EventArgs")
+		//		|| type.Name.EndsWith("EventHandler")
+		//		|| type.Name == "Regex"
+		//		|| type.Name == "IntPtr"
+		//		|| type.Name == "Point"
+		//		|| type.Name == "Size"
+		//		|| type.Name == "SizeF"
+		//		|| type.Name == "Font"
+		//			|| type.Name == "Boolean"
+		//			|| type.Name == "String"
+		//			|| type.Name == "String[]"
+		//			|| type.Name == "String&"
+		//			|| type.Name == "Int16"
+		//			|| type.Name == "Int32"
+		//			|| type.Name == "Int64"
+		//			|| type.Name == "Double"
+		//			|| type.Name == "Float"
+		//			|| type.Name == "Guid"
+		//			|| type.Name.Contains("AnonymousType")
+		//			;
+		//}
 
-		public static string FriendlyName(this TypeReference td)
-		{
-			if (td.IsGenericInstance || td.HasGenericParameters)
-			{
-				return MakeGenericFriendlyName(td);
-			}
+		//public static string FriendlyName(this TypeReference td)
+		//{
+		//	if (td.IsGenericInstance || td.HasGenericParameters)
+		//	{
+		//		return MakeGenericFriendlyName(td);
+		//	}
 
-			return td.FullName;
-		}
+		//	return td.FullName;
+		//}
 
-		public static bool IsPublicInterface(this TypeReference candidateInterace)
-		{
-			TypeDefinition interfaceDefinition = candidateInterace as TypeDefinition;
+		//public static bool IsPublicInterface(this TypeReference candidateInterace)
+		//{
+		//	TypeDefinition interfaceDefinition = candidateInterace as TypeDefinition;
 
-			if (interfaceDefinition != null)
-			{
-				return interfaceDefinition.IsPublic;
-			}
+		//	if (interfaceDefinition != null)
+		//	{
+		//		return interfaceDefinition.IsPublic;
+		//	}
 
-			return false;
-		}
+		//	return false;
+		//}
 
-		private static string MakeGenericFriendlyName(TypeReference td)
-		{
-			var builder = new StringBuilder();
+		//private static string MakeGenericFriendlyName(TypeReference td)
+		//{
+		//	var builder = new StringBuilder();
 
-			if (!string.IsNullOrEmpty(td.Namespace))
-				builder.AppendFormat("{0}.", td.Namespace);
+		//	if (!string.IsNullOrEmpty(td.Namespace))
+		//		builder.AppendFormat("{0}.", td.Namespace);
 
-			string className = StripGenericNameSuffix(td);
+		//	string className = StripGenericNameSuffix(td);
 
-			builder.Append(className);
+		//	builder.Append(className);
 
-			const string OpenTag = "<";
-			const string CloseTag = ">";
+		//	const string OpenTag = "<";
+		//	const string CloseTag = ">";
 
-			builder.Append(OpenTag);
+		//	builder.Append(OpenTag);
 
-			if (td.HasGenericParameters)
-			{
-				builder.Append(CreateGenericParameterList(td.GenericParameters));
-			}
-			else if (td.IsGenericInstance)
-			{
-				GenericInstanceType git = td as GenericInstanceType;
+		//	if (td.HasGenericParameters)
+		//	{
+		//		builder.Append(CreateGenericParameterList(td.GenericParameters));
+		//	}
+		//	else if (td.IsGenericInstance)
+		//	{
+		//		GenericInstanceType git = td as GenericInstanceType;
 
-				if (git != null)
-				{
-					builder.Append(CreateParameterList(git.GenericArguments));
-				}
-			}
+		//		if (git != null)
+		//		{
+		//			builder.Append(CreateParameterList(git.GenericArguments));
+		//		}
+		//	}
 
 
-			builder.Append(CloseTag);
+		//	builder.Append(CloseTag);
 
-			return builder.ToString();
-		}
+		//	return builder.ToString();
+		//}
 
-		private static string StripGenericNameSuffix(TypeReference td)
-		{
-			const char Tilde = '`';
+		//private static string StripGenericNameSuffix(TypeReference td)
+		//{
+		//	const char Tilde = '`';
 
-			int tildePosition = td.Name.IndexOf(Tilde);
+		//	int tildePosition = td.Name.IndexOf(Tilde);
 
-			if (tildePosition > 0)
-			{
-				return td.Name.Substring(0, tildePosition);
-			}
+		//	if (tildePosition > 0)
+		//	{
+		//		return td.Name.Substring(0, tildePosition);
+		//	}
 
-			return td.Name;
-		}
+		//	return td.Name;
+		//}
 
-		private static string CreateGenericParameterList(IEnumerable<GenericParameter> parameters)
-		{
-			var list = new List<string>();
+		//private static string CreateGenericParameterList(IEnumerable<GenericParameter> parameters)
+		//{
+		//	var list = new List<string>();
 
-			foreach (var p in parameters)
-			{
-				list.Add(p.Name);
-			}
+		//	foreach (var p in parameters)
+		//	{
+		//		list.Add(p.Name);
+		//	}
 
-			const string CommaDelimiter = ",";
+		//	const string CommaDelimiter = ",";
 
-			return string.Join(CommaDelimiter, list);
-		}
+		//	return string.Join(CommaDelimiter, list);
+		//}
 
-		private static string CreateParameterList(IEnumerable<TypeReference> parameters)
-		{
-			var list = new List<string>();
+		//private static string CreateParameterList(IEnumerable<TypeReference> parameters)
+		//{
+		//	var list = new List<string>();
 
-			foreach (var p in parameters)
-			{
-				list.Add(p.Name);
-			}
+		//	foreach (var p in parameters)
+		//	{
+		//		list.Add(p.Name);
+		//	}
 
-			const string CommaDelimiter = ",";
+		//	const string CommaDelimiter = ",";
 
-			return string.Join(CommaDelimiter, list);
-		}
+		//	return string.Join(CommaDelimiter, list);
+		//}
     }
 
 }

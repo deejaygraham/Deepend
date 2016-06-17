@@ -7,6 +7,26 @@ using System.Threading.Tasks;
 
 namespace Deepend
 {
+	public class ConsoleDependencyWriter
+	{
+		public void Write(Graph<AssemblyInfo> graph)
+		{
+			int count = 0;
+
+			foreach(var node in graph.Nodes)
+			{
+				Console.WriteLine("{0} {1} {2}", ++count, node.Name, node.Version);
+
+				int edgeCount = 0;
+
+				foreach(var edge in graph.EdgesFor(node))
+				{
+					Console.WriteLine("\t{0} {1} {2}", ++edgeCount, edge.Name, edge.Version);
+				}
+			}
+		}
+	}
+
 	public class AnalyseAssemblyReferences : ISupportedCommand
 	{
 		public string AssemblyName { get; set; }
@@ -21,6 +41,11 @@ namespace Deepend
 			}
 
 			var assemblyList = new List<string>();
+
+			var graph2 = AssemblyReferenceBuilder.Build(this.AssemblyName, this.Depth);
+
+			var cdw = new ConsoleDependencyWriter();
+			cdw.Write(graph2);
 
 			var ar = AssemblyReferenceBuilder.Load(this.AssemblyName, this.Depth, 0, assemblyList);
 

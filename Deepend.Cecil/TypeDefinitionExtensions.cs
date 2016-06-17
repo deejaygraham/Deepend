@@ -1,17 +1,43 @@
 ﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Deepend
 {
     public static class TypeDefinitionExtensions
     {
-		public static bool HasSuperClass(this TypeDefinition discovered)
-		{
-			const string BaseObjectName = "System.Object";
+		//public static bool HasSuperClass(this TypeDefinition discovered)
+		//{
+		//	const string BaseObjectName = "System.Object";
 
-			return discovered.BaseType != null && discovered.BaseType.FullName != BaseObjectName;
-		}
+		//	return discovered.BaseType != null && discovered.BaseType.FullName != BaseObjectName;
+		//}
+
+		//public static TypeName FindInheritance(this TypeDefinition td)
+		//{
+		//	if (td.HasSuperClass())
+		//	{
+		//		return td.BaseType.ToTypeName();
+		//	}
+
+		//	return null;
+		//}
+
+		//public static IEnumerable<TypeName> ListImplementations(this TypeDefinition td)
+		//{
+		//	var list = new List<TypeName>();
+
+		//	if (td.HasInterfaces)
+		//	{
+		//		foreach (var intf in td.Interfaces)
+		//		{
+		//			list.Add(intf.ToTypeName());
+		//		}
+		//	}
+
+		//	return list;
+		//}
 
 		public static void DiscoverInheritance(this TypeDefinition td, IntrospectedType it, TypeNameInventory tni)
         {
@@ -30,6 +56,21 @@ namespace Deepend
                 it.DerivingFrom(td.BaseType);
             }
         }
+
+		//public IEnumerable<TypeName> ListProperties(this TypeDefinition td)
+		//{
+		//	var list = new List<TypeName>();
+
+		//	if (td.HasProperties)
+		//	{
+		//		foreach (var prop in td.Properties)
+		//		{
+		//			list.Add(prop.PropertyType.ToTypeName());
+		//		}
+		//	}
+
+		//	return list;
+		//}
 
 		public static void DiscoverProperties(this TypeDefinition td, IntrospectedType it, TypeNameInventory tni)
         {
@@ -87,16 +128,16 @@ namespace Deepend
         }
 
 		public static void DiscoverFields(this TypeDefinition td, IntrospectedType it, TypeNameInventory tni)
-        {
-            if (td.HasFields)
-            {
-                foreach (var field in td.Fields.Where(f => !f.IsPrivate && f.FieldType.ShouldBeIncluded()))
-                {
+		{
+			if (td.HasFields)
+			{
+				foreach (var field in td.Fields.Where(f => !f.IsPrivate && f.FieldType.ShouldBeIncluded()))
+				{
 					tni.Add(field.FieldType.ToTypeName());
 
-                    it.TalkingTo(field.FieldType);
-                }
-            }
-        }
+					it.TalkingTo(field.FieldType);
+				}
+			}
+		}
     }
 }

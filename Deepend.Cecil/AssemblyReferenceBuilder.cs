@@ -11,30 +11,64 @@ namespace Deepend
 	{
 		public static Graph<AssemblyInfo> Build(string assembly, ReferenceDepth depth)
 		{
-			var assemblyContent = AssemblyDefinition.ReadAssembly(assembly);
-
 			var graph = new Graph<AssemblyInfo>();
 
-			var mainAssembly = new AssemblyInfo
+			Build(graph, null, assembly, depth, 0, new List<string>());
+
+			return graph;
+		}
+
+		private static void Build(Graph<AssemblyInfo> graph, AssemblyInfo dependent, string assemblyName, ReferenceDepth depth, int level, IList<string> visitedAssemblies)
+		{
+			var reflection = AssemblyDefinition.ReadAssembly(assemblyName);
+
+			var assembly = new AssemblyInfo
 			(
-				assemblyContent.Name.Name,
-				assemblyContent.Name.Version,
-				assemblyContent.MainModule.Runtime.ToString().Replace("_", "."),
+				reflection.Name.Name,
+				reflection.Name.Version,
+				reflection.MainModule.Runtime.ToString().Replace("_", "."),
 				AssemblyLocation.Local
 			);
 
-			graph.Add(mainAssembly);
+			if (dependent == null)
+				graph.Add(assembly);
+			else
+				graph.EdgeBetween(dependent, assembly);
 
-			string folder = System.IO.Path.GetDirectoryName(assemblyContent.MainModule.FullyQualifiedName);
+			if (depth == ReferenceDepth.TopLevelOnly && level >= 1)
+				return;
 
-			var references = assemblyContent.MainModule.AssemblyReferences;
+			// now look at references to this assembly...
+			string folder = System.IO.Path.GetDirectoryName(reflection.MainModule.FullyQualifiedName);
 
-			foreach (var r in references)
+			foreach (var reference in reflection.MainModule.AssemblyReferences)
 			{
-				graph.EdgeBetween(mainAssembly, new AssemblyInfo(r.Name, r.Version));
+				string referenceAssembly = reference.Name + ".dll";
+				string pathToReference = System.IO.Path.Combine(folder, referenceAssembly);
+
+				if (!System.IO.File.Exists(pathToReference))
+				{
+					// is it in the GAC?
+					pathToReference = NativeMethods.QueryPathInGlobalAssemblyCache(reference.Name);
+				}
+
+				if (!System.IO.File.Exists(pathToReference))
+				{
+					graph.EdgeBetween(assembly, new AssemblyInfo(reference.Name, reference.Version));
+				}
+				else
+				{
+					if (!visitedAssemblies.Contains(referenceAssembly))
+					{
+						visitedAssemblies.Add(referenceAssembly);
+						Build(graph, assembly, pathToReference, depth, level + 1, visitedAssemblies);
+					}
+					else
+					{
+						// already seen it!
+					}
+				}
 			}
-			
-			return new Graph<AssemblyInfo>();
 		}
 
 		public static AssemblyReference Load(string name, ReferenceDepth depth, int level, IList<string> assemblies)

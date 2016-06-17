@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Deepend
 {
@@ -7,8 +8,10 @@ namespace Deepend
 		void Node(Node n);
 		void Edge(Edge e);
 
-        void SaveTo(TextWriter writer);
+		void SaveTo(TextWriter writer);
 
+		void Write(Graph<AssemblyInfo> graph, TextWriter writer);
+		void Write(Graph<TypeInfo> graph, TextWriter writer);
 		
     }
 }

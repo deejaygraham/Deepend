@@ -49,6 +49,62 @@ namespace Deepend
             writer.WriteLine("</DirectedGraph>");
         }
 
+		public void Write(Graph<AssemblyInfo> graph, TextWriter writer)
+		{
+			writer.WriteLine("<?xml version=\'1.0\' encoding=\'utf-8\'?>");
+			writer.WriteLine("<DirectedGraph xmlns=\'http://schemas.microsoft.com/vs/2009/dgml\' GraphDirection=\"LeftToRight\">");
+
+			writer.WriteLine("\t<Nodes>");
+
+			foreach (var node in graph.Nodes)
+			{
+				writer.WriteLine("\t\t<Node Id=\"{0}\" Label=\"{1}\" />", node.Id, node.Name);
+			}
+
+			writer.WriteLine("\t</Nodes>");
+
+			writer.WriteLine("\t<Links>");
+
+			foreach (var node in graph.Nodes)
+			{
+				foreach(var edge in graph.EdgesFor(node))
+				{
+					writer.WriteLine("\t\t<Link Source=\"{0}\" Target=\"{1}\" />", node.Id, edge.Id);
+				}
+			}
+			writer.WriteLine("\t</Links>");
+
+			writer.WriteLine("</DirectedGraph>");
+		}
+
+		public void Write(Graph<TypeInfo> graph, TextWriter writer)
+		{
+			writer.WriteLine("<?xml version=\'1.0\' encoding=\'utf-8\'?>");
+			writer.WriteLine("<DirectedGraph xmlns=\'http://schemas.microsoft.com/vs/2009/dgml\' GraphDirection=\"LeftToRight\">");
+
+			writer.WriteLine("\t<Nodes>");
+
+			foreach (var node in graph.Nodes)
+			{
+				writer.WriteLine("\t\t<Node Id=\"{0}\" Label=\"{1}\" />", node.Id, node.Name.Replace("<", "&lt;").Replace(">", "&gt;"));
+			}
+
+			writer.WriteLine("\t</Nodes>");
+
+			writer.WriteLine("\t<Links>");
+
+			foreach (var node in graph.Nodes)
+			{
+				foreach (var edge in graph.EdgesFor(node))
+				{
+					writer.WriteLine("\t\t<Link Source=\"{0}\" Target=\"{1}\" />", node.Id, edge.Id);
+				}
+			}
+			writer.WriteLine("\t</Links>");
+
+			writer.WriteLine("</DirectedGraph>");
+		}
+
 		public void Node(Node n)
 		{
 			var builder = new StringBuilder();

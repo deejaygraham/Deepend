@@ -105,9 +105,14 @@ namespace Deepend
 					outputPath = assemblyPath.Replace(assemblyExtension, graphExtension).Replace(exeExtension, graphExtension);
 				}
 
+				var g3 = TypeReferenceBuilder.Build(assemblyPath, TypeDetail.All);
+
+				//var graph2 = AssemblyReferenceBuilder.Build(assemblyPath, recursive ? ReferenceDepth.Recursive : ReferenceDepth.TopLevelOnly);
+
 				using (StreamWriter writer = new StreamWriter(outputPath))
 				{
-					dg.SaveTo(writer);
+					// graph2
+					dg.Write(g3, writer);
 				}
             }
             catch(Exception ex)

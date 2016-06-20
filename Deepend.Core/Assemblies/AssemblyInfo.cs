@@ -19,6 +19,7 @@ namespace Deepend
 			this.Version = version.ToString();
 			this.Runtime = runtimeVersion;
 			this.Location = location;
+			this.Metadata = new Dictionary<string, string>();
 		}
 
 		public string Id { get { return this.Name.Replace(".", "_"); } }
@@ -30,6 +31,8 @@ namespace Deepend
 		public string Runtime { get; private set; }
 
 		public AssemblyLocation Location { get; private set; }
+
+		public Dictionary<string, string> Metadata { get; set; }
 
 		public override string ToString()
 		{

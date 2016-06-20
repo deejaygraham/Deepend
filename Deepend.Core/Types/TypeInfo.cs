@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Deepend
 {
@@ -13,9 +10,13 @@ namespace Deepend
 		public TypeInfo(string fullName)
 		{
 			this.name = fullName;
+			this.Id = fullName.DotsToUnderscores().ToSafeName();
+			this.Metadata = new Dictionary<string, string>();
 		}
 
-		public string Id { get { return this.Name.Replace(".", "_"); } }
+		public string Id { get; private set; }
+
+		public Dictionary<string, string> Metadata { get; set; }
 
 		public string FullName
 		{
@@ -24,7 +25,7 @@ namespace Deepend
 				return this.name;
 			}
 		}
-
+		
 		public string Name
 		{
 			get
@@ -39,7 +40,7 @@ namespace Deepend
 					text = this.name.Substring(index + 1);
 				}
 
-				return text.Replace("<", "&lt;").Replace(">", "&gt;");
+				return text;
 			}
 		}
 
@@ -123,6 +124,24 @@ namespace Deepend
 			}
 
 			return this.FullName.CompareTo(other.FullName);
+		}
+	}
+
+	public static class StringExtensions
+	{
+		public static string ToSafeName(this string name)
+		{
+			string safe = name;
+
+			if (name.EndsWith("&"))
+				safe = name.TrimEnd(new char[] { '&' });
+ 
+			return safe.Replace("<", "&lt;").Replace(">", "&gt;");
+		}
+
+		public static string DotsToUnderscores(this string name)
+		{
+			return name.Replace(".", "_").Replace("&", "");
 		}
 	}
 }

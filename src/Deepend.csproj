@@ -48,8 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DgmlDependencies.cs" />
-    <Compile Include="DotGraphDependencies.cs" />
+    <Compile Include="ConsoleDependencyWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

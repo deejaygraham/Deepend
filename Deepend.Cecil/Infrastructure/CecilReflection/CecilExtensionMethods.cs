@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,8 @@ namespace Deepend
 		{
 			const string BaseObjectName = "System.Object";
 
-			return td.BaseType != null && td.BaseType.FullName != BaseObjectName;
+			return td.BaseType != null 
+				&& !td.BaseType.FullName.Equals(BaseObjectName, StringComparison.CurrentCultureIgnoreCase);
 		}
 
 		public static TypeInfo FindInheritance(this TypeDefinition td)
@@ -41,40 +43,36 @@ namespace Deepend
 			return list;
 		}
 
-		public static IEnumerable<TypeInfo> PropertyTypes(this TypeDefinition td)
+		public static IEnumerable<TypeInfo> PropertyTypes(this TypeDefinition td, Predicate<TypeReference> predicate)
 		{
 			var list = new List<TypeInfo>();
 
 			if (td.HasProperties)
 			{
-				foreach (var prop in td.Properties.Where(p => !p.PropertyType.IsPrimitive && !p.PropertyType.IsPrimitive()))
+				foreach (var prop in td.Properties.Select(p => p.PropertyType))
 				{
-					list.Add(prop.PropertyType.ToTypeInfo());
+					if (predicate(prop))
+						list.Add(prop.ToTypeInfo());
 				}
 			}
 
 			return list;
 		}
 
-		public static IEnumerable<TypeInfo> FieldTypes(this TypeDefinition td)
+		public static IEnumerable<TypeInfo> FieldTypes(this TypeDefinition td, Predicate<TypeReference> predicate)
 		{
 			var list = new List<TypeInfo>();
 
 			if (td.HasFields)
 			{
-				foreach (var field in td.Fields.Where(f => !f.IsPrivate && !f.FieldType.IsPrimitive && !f.FieldType.IsPrimitive())) 
-					//.Where(f => !f.IsPrivate && f.FieldType.ShouldBeIncluded()))
+				foreach (var field in td.Fields.Select(f => f.FieldType)) 
 				{
-					list.Add(field.FieldType.ToTypeInfo());
+					if (predicate(field))
+						list.Add(field.ToTypeInfo());
 				}
 			}
 
 			return list;
-		}
-
-		public static TypeName ToTypeName(this TypeReference tr)
-		{
-			return new TypeName(tr.FriendlyName());
 		}
 
 		public static TypeInfo ToTypeInfo(this TypeReference tr)
@@ -82,7 +80,20 @@ namespace Deepend
 			return new TypeInfo(tr.FriendlyName());
 		}
 
-		// move into another filter ????
+		public static string ParentNamespaceOf(this string namesp)
+		{
+			string parent = string.Empty;
+
+			const char Dot = '.';
+
+			if (namesp.Contains(Dot))
+			{
+				int index = namesp.LastIndexOf(Dot);
+				parent = namesp.Substring(0, index);
+			}
+
+			return parent;
+		}
 
 		private static List<string> primitiveTypes = new List<string>
 		{
@@ -205,6 +216,65 @@ namespace Deepend
 			const string CommaDelimiter = ",";
 
 			return string.Join(CommaDelimiter, list);
+		}
+
+		public static IEnumerable<MethodInfo> MethodTypes(this TypeDefinition td, Predicate<TypeReference> predicate)
+		{
+			var list = new List<MethodInfo>();
+
+			if (!td.HasMethods)
+				return list;
+
+			foreach (var method in td.Methods)
+			{
+				MethodInfo mi = new MethodInfo();
+				
+				if (predicate(method.ReturnType))
+					mi.Signature.ReturnType = method.ReturnType.ToTypeInfo();
+
+				if (method.HasParameters)
+				{
+					foreach (var parameter in method.Parameters.Select(p => p.ParameterType))
+					{
+						if (predicate(parameter))
+							mi.Signature.Parameters.Add(parameter.ToTypeInfo());
+					}
+				}
+
+				if (!method.IsAbstract && method.HasBody)
+				{
+					var body = method.Body;
+
+					if (body != null)
+					{
+						foreach (Instruction instr in body.Instructions.Where(i => i.OpCode.Code == Code.Newobj))
+						{
+							MethodReference methodReference = instr.Operand as MethodReference;
+
+							if (methodReference != null)
+							{
+								if (predicate(method.DeclaringType))
+									mi.CreatedObjects.Add(methodReference.DeclaringType.ToTypeInfo());
+							}
+						}
+					}
+				}
+
+				if (mi.CreatedObjects.Any() || mi.Signature.ReturnType != null || mi.Signature.Parameters.Any())
+					list.Add(mi);
+			}
+
+			return list;
+		}
+
+		public static bool InSystemNamespace(this TypeReference type)
+		{
+			return type.Namespace.StartsWith("System")
+				|| type.Namespace.StartsWith("Microsoft")
+				|| type.Namespace == "System.Resources"
+				|| type.Namespace.StartsWith("System.Windows.Forms")
+				|| type.Namespace.StartsWith("System.Drawing")
+				|| type.Namespace.StartsWith("Microsoft.ManagementConsole");
 		}
 	}
 }

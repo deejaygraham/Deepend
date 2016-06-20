@@ -9,8 +9,13 @@ namespace Deepend
 		private List<T> nodes = new List<T>();
 		private Dictionary<int, HashSet<int>> edges = new Dictionary<int, HashSet<int>>();
 
+		readonly int InvalidIndex = -1;
+
 		public int Add(T node)
 		{
+			if (node == null)
+				return InvalidIndex;
+
 			// find by name ?? 
 			if (!this.nodes.Contains(node))
 				this.nodes.Add(node);
@@ -28,10 +33,15 @@ namespace Deepend
 			int fromIndex = Add(from);
 			int toIndex = Add(to);
 
-			if (fromIndex == toIndex)
-				throw new ArgumentException("Edges cannot connect two instances of the same object");
+			if (fromIndex == InvalidIndex || toIndex == InvalidIndex)
+				return;
 
-			this.edges[fromIndex].Add(toIndex);
+//			throw new ArgumentException(string.Format("Edges cannot connect two instances of the same object {0} -> {1}", from.ToString(), to.ToString()));
+
+			if (fromIndex != toIndex)
+			{
+				this.edges[fromIndex].Add(toIndex);
+			}
 		}
 
 		public IEnumerable<T> Nodes

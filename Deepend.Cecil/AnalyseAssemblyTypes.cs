@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Deepend
 {
-    public class AnalyseAssemblyTypes : ISupportedCommand
+    public class AnalyseAssemblyTypes //: ISupportedCommand
     {
         public string AssemblyName { get; set; }
 
@@ -28,37 +28,37 @@ namespace Deepend
 
             var assemblyContent = AssemblyDefinition.ReadAssembly(this.AssemblyName);
 
-            var typeInventory = new TypeInventory();
+			//var typeInventory = new TypeInventory();
 
-            var factory = new IntrospectedTypeFactory();
+			//var factory = new IntrospectedTypeFactory();
 
-			IEnumerable<TypeDefinition> types = assemblyContent.MainModule.Types;
+			//IEnumerable<TypeDefinition> types = assemblyContent.MainModule.Types;
 
-			foreach (IFilterTypes filter in this.Filters)
-			{
-				types = filter.Filter(types);;
-			}
+			//foreach (IFilterTypes filter in this.Filters)
+			//{
+			//	types = filter.Filter(types);;
+			//}
 
-			var typeList = new TypeNameInventory();
+			//var typeList = new TypeNameInventory();
 
-			foreach (var type in types)
-            {
-				typeList.Add(new TypeName(type.FullName));
-            }
+			//foreach (var type in types)
+			//{
+			//	typeList.Add(new TypeName(type.FullName));
+			//}
 
-			foreach (var type in types)
-			{
-				typeInventory.Add(factory.CreateFrom(type, typeList));
-			}
+			//foreach (var type in types)
+			//{
+			//	typeInventory.Add(factory.CreateFrom(type, typeList));
+			//}
 
-			var list = typeInventory.Generate(typeList);
+			//var list = typeInventory.Generate(typeList);
 
-			list = list.Concat(typeList.Generate());
+			//list = list.Concat(typeList.Generate());
 
-			foreach (var item in list)
-			{
-				item.WriteTo(graph);
-			}
+			//foreach (var item in list)
+			//{
+			//	item.WriteTo(graph);
+			//}
         }
     }
 }

@@ -41,17 +41,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assemblies\AssemblyInfo.cs" />
-    <Compile Include="AssemblyLocation.cs" />
-    <Compile Include="Edge.cs" />
+    <Compile Include="Assemblies\AssemblyLocation.cs" />
+    <Compile Include="Infrastructure\Output\DgmlDependencies.cs" />
+    <Compile Include="Infrastructure\Output\DotGraphDependencies.cs" />
     <Compile Include="Graphs\Graph.cs" />
-    <Compile Include="IGraphable.cs" />
-    <Compile Include="IGraphDependencies.cs" />
-    <Compile Include="Node.cs" />
+    <Compile Include="Graphs\IGraphDependencies.cs" />
     <Compile Include="Output\IGraphWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferenceDepth.cs" />
+    <Compile Include="Assemblies\ReferenceDepth.cs" />
     <Compile Include="Types\TypeDetail.cs" />
     <Compile Include="Types\TypeInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Actions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

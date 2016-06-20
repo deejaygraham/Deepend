@@ -50,7 +50,7 @@ namespace Deepend
 			// filter simple types out ...
 			if (detailLevel.HasFlag(TypeDetail.Properties))
 			{
-				foreach(var property in type.PropertyTypes())
+				foreach(var property in type.PropertyTypes(r => !r.IsPrimitive && !r.IsPrimitive()))
 				{
 					try
 					{
@@ -62,7 +62,7 @@ namespace Deepend
 
 			if (detailLevel.HasFlag(TypeDetail.Fields))
 			{
-				foreach(var field in type.FieldTypes())
+				foreach (var field in type.FieldTypes(f => !f.IsPrimitive && !f.IsPrimitive()))
 				{
 					try
 					{
@@ -91,6 +91,33 @@ namespace Deepend
 				if (inheritance != null)
 				{
 					graph.EdgeBetween(thisType, inheritance);
+				}
+			}
+
+			if (detailLevel.HasFlag(TypeDetail.MethodCalls) || detailLevel.HasFlag(TypeDetail.ObjectCreation))
+			{
+				var mis = type.MethodTypes(m => !m.IsPrimitive && !m.IsPrimitive());
+
+				foreach(var mi in mis)
+				{
+					if (detailLevel.HasFlag(TypeDetail.MethodCalls))
+					{
+						if (mi.Signature.ReturnType != null)
+							graph.EdgeBetween(thisType, mi.Signature.ReturnType);
+
+						foreach (var p in mi.Signature.Parameters)
+						{
+							graph.EdgeBetween(thisType, p);
+						}
+					}
+
+					if (detailLevel.HasFlag(TypeDetail.ObjectCreation))
+					{
+						foreach (var newObject in mi.CreatedObjects)
+						{
+							graph.EdgeBetween(thisType, newObject);
+						}
+					}
 				}
 			}
 		}

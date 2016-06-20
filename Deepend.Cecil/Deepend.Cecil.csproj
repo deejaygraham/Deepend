@@ -62,8 +62,6 @@
     <Compile Include="Infrastructure\CecilReflection\CecilExtensionMethods.cs" />
     <Compile Include="Filters\GeneratedTypeFilter.cs" />
     <Compile Include="Filters\IFilterTypes.cs" />
-    <Compile Include="Types\MethodInfo.cs" />
-    <Compile Include="Types\MethodSignature.cs" />
     <Compile Include="Filters\ModuleFilter.cs" />
     <Compile Include="Filters\NamespaceSpecificFilter.cs" />
     <Compile Include="NativeMethods.cs" />
@@ -80,6 +78,9 @@
       <Project>{70b86015-f1d8-46c9-b5ab-b2483ac4cacd}</Project>
       <Name>Deepend.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Types\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -15,6 +15,4 @@ namespace Deepend
 		Interfaces = 64,
 		All = 255
 	}
-
-	// if ( prop.Detail.HasFlag(TypeDetail.Fields)) { }
 }

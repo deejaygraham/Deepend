@@ -1,16 +1,12 @@
 ﻿using Mono.Cecil;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Deepend
 {
 	public static class TypeReferenceBuilder
 	{
-		public static Graph<TypeInfo> Build(string assemblyName, TypeDetail detail)
+		public static Graph<TypeInfo> Build(string assemblyName, TypeDetail detail, IEnumerable<IFilterTypes> filters)
 		{
 			if (!File.Exists(assemblyName))
 			{
@@ -22,9 +18,7 @@ namespace Deepend
 			var assemblyContent = AssemblyDefinition.ReadAssembly(assemblyName);
 
 			IEnumerable<TypeDefinition> types = assemblyContent.MainModule.Types;
-
-			var filters = new List<IFilterTypes> { new ModuleFilter(), new GeneratedTypeFilter() };
-
+			
 			foreach (IFilterTypes filter in filters)
 			{
 				types = filter.Filter(types);

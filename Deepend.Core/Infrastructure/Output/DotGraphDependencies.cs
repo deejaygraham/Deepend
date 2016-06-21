@@ -5,10 +5,14 @@ namespace Deepend
 {
     public class DotGraphDependencies : IGraphDependencies
     {
+		readonly string DotGraphHeader = "digraph G";
+		readonly string OpeningBrace = "{";
+		readonly string ClosingBrace = "}";
+
 		public void Write(Graph<AssemblyInfo> graph, TextWriter writer)
 		{
-			writer.WriteLine("digraph G");
-			writer.WriteLine("{");
+			writer.WriteLine(DotGraphHeader);
+			writer.WriteLine(OpeningBrace);
 			writer.WriteLine("rankdir = LR");
 
 			foreach(var node in graph.Nodes)
@@ -21,13 +25,13 @@ namespace Deepend
 				}
 			}
 
-			writer.WriteLine("}");
+			writer.WriteLine(ClosingBrace);
 		}
 
 		public void Write(Graph<TypeInfo> graph, TextWriter writer)
 		{
-			writer.WriteLine("digraph G");
-			writer.WriteLine("{");
+			writer.WriteLine(DotGraphHeader);
+			writer.WriteLine(OpeningBrace);
 			writer.WriteLine("rankdir = LR");
 
 			foreach (var node in graph.Nodes)
@@ -40,9 +44,7 @@ namespace Deepend
 				}
 			}
 
-			writer.WriteLine("}");
+			writer.WriteLine(ClosingBrace);
 		}
-
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using NDesk.Options;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Deepend
@@ -42,50 +43,17 @@ namespace Deepend
 					return 0;
 				}
 
-				// default command
-				//ISupportedCommand command = null;
-
-				if (analyseReferences)
-				{
-					var command = new AnalyseAssemblyReferences
-					{
-						AssemblyName = assemblyPath,
-						Depth = recursive ? ReferenceDepth.Recursive : ReferenceDepth.TopLevelOnly
-					};
-				}
-				else
-				{
-					AnalyseAssemblyTypes typeAnalysis = new AnalyseAssemblyTypes
-					{
-						AssemblyName = assemblyPath
-					};
-					
-					if (!String.IsNullOrEmpty(specificType))
-					{
-						typeAnalysis.Filters.Add(new TypeSpecificFilter(specificType));
-					}
-
-					if (!String.IsNullOrEmpty(specificNamespace))
-					{
-						typeAnalysis.Filters.Add(new NamespaceSpecificFilter(specificNamespace));
-					}
-
-					var command = typeAnalysis;
-				}
-
-				IGraphDependencies dg = null;
+				IGraphDependencies dependencyWriter = null;
 
 				if (outputAsDot)
 				{
-					dg = new DotGraphDependencies();
+					dependencyWriter = new DotGraphDependencies();
 				}
 				else if (outputAsDgml)
 				{
-					dg = new DgmlDependencies();
+					dependencyWriter = new DgmlDependencies();
 				}
 
-				// command.Execute(dg);
-				
 				if (String.IsNullOrEmpty(outputPath))
 				{
 					string graphExtension = ".dgml";
@@ -105,14 +73,42 @@ namespace Deepend
 					outputPath = assemblyPath.Replace(assemblyExtension, graphExtension).Replace(exeExtension, graphExtension);
 				}
 
-				var g3 = TypeReferenceBuilder.Build(assemblyPath, TypeDetail.All);
-
-				//var graph2 = AssemblyReferenceBuilder.Build(assemblyPath, recursive ? ReferenceDepth.Recursive : ReferenceDepth.TopLevelOnly);
-
-				using (StreamWriter writer = new StreamWriter(outputPath))
+				if (analyseReferences)
 				{
-					// graph2
-					dg.Write(g3, writer);
+					ReferenceDepth depth = recursive ? ReferenceDepth.Recursive : ReferenceDepth.TopLevelOnly;
+					var graph = AssemblyReferenceBuilder.Build(assemblyPath, depth);
+
+					using (StreamWriter writer = new StreamWriter(outputPath))
+					{
+						dependencyWriter.Write(graph, writer);
+					}
+				}
+				else
+				{
+					TypeDetail detail = TypeDetail.All;
+
+					var filters = new List<IFilterTypes> 
+					{ 
+						new ModuleFilter(), 
+						new GeneratedTypeFilter() 
+					};
+
+					if (!String.IsNullOrEmpty(specificType))
+					{
+						filters.Add(new TypeSpecificFilter(specificType));
+					}
+
+					if (!String.IsNullOrEmpty(specificNamespace))
+					{
+						filters.Add(new NamespaceSpecificFilter(specificNamespace));
+					}
+
+					var graph = TypeReferenceBuilder.Build(assemblyPath, detail, filters);
+
+					using (StreamWriter writer = new StreamWriter(outputPath))
+					{
+						dependencyWriter.Write(graph, writer);
+					}
 				}
             }
             catch(Exception ex)

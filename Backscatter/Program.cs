@@ -40,7 +40,6 @@ namespace Backscatter
 				// look at assembly 
 				string assemblyFolder = System.IO.Path.GetDirectoryName(assemblyPath);
 
-				assemblyFolder = @"D:\Dev\std18\dt1\Source\Master\bin\debug";
 				// find all assemblies that contain a reference to this assembly
 				var graph = ReverseAssemblyReferenceBuilder.Build(assemblyPath, assemblyFolder);
 
@@ -67,11 +66,8 @@ namespace Backscatter
 
 				using (StreamWriter writer = new StreamWriter(outputPath))
 				{
-					// graph2
 					dg.Write(graph, writer);
 				}
-
-
             }
             catch(Exception ex)
             {

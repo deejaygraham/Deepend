@@ -29,7 +29,7 @@ namespace Deepend
 
 		public AssemblyLocation Location { get; private set; }
 
-		public Dictionary<string, string> Metadata { get; set; }
+		public Dictionary<string, string> Metadata { get; private set; }
 
 		public override string ToString()
 		{
@@ -55,9 +55,7 @@ namespace Deepend
 				return false;
 			}
 
-			const bool IgnoreCase = false;
-
-			return string.Compare(this.ToString(), another.ToString(), IgnoreCase) == 0;
+			return string.Compare(this.ToString(), another.ToString(), StringComparison.CurrentCultureIgnoreCase) == 0;
 		}
 
 		public int CompareTo(AssemblyInfo other)
@@ -67,7 +65,7 @@ namespace Deepend
 				return 1;
 			}
 
-			return this.ToString().CompareTo(other.ToString());
+			return String.Compare(this.ToString(), other.ToString(), StringComparison.CurrentCultureIgnoreCase);
 		}
 
 

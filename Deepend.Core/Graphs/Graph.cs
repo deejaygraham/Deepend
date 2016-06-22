@@ -56,7 +56,7 @@ namespace Deepend
 		{
 			foreach (T node in this.nodes)
 			{
-				if (predicate(node))
+				if (predicate != null && predicate(node))
 					return node;
 			}
 

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -51,7 +52,7 @@
     <Compile Include="Assemblies\ReferenceDepth.cs" />
     <Compile Include="Types\MethodInfo.cs" />
     <Compile Include="Types\MethodSignature.cs" />
-    <Compile Include="Types\TypeDetail.cs" />
+    <Compile Include="Types\TypeDetails.cs" />
     <Compile Include="Types\TypeInfo.cs" />
   </ItemGroup>
   <ItemGroup>

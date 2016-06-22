@@ -12,6 +12,6 @@ namespace Deepend
 
 		public MethodSignature Signature { get; set; }
 
-		public List<TypeInfo> CreatedObjects { get; set; }
+		public List<TypeInfo> CreatedObjects { get; private set; }
 	}
 }

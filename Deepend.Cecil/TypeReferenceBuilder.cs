@@ -6,7 +6,7 @@ namespace Deepend
 {
 	public static class TypeReferenceBuilder
 	{
-		public static Graph<TypeInfo> Build(string assemblyName, TypeDetail detail, IEnumerable<IFilterTypes> filters)
+		public static Graph<TypeInfo> Build(string assemblyName, TypeDetails detail, IEnumerable<IFilterTypes> filters)
 		{
 			if (!File.Exists(assemblyName))
 			{
@@ -32,85 +32,110 @@ namespace Deepend
 			return graph;
 		}
 
-		private static void Build(Graph<TypeInfo> graph, TypeDefinition type, TypeDetail detailLevel)
+		private static void Build(Graph<TypeInfo> graph, TypeDefinition type, TypeDetails detailLevel)
 		{
 			var thisType = new TypeInfo(type.FullName);
 
 			graph.Add(thisType);
 
-			if (detailLevel == TypeDetail.None)
+			if (detailLevel == TypeDetails.None)
 				return;
 
 			// filter simple types out ...
-			if (detailLevel.HasFlag(TypeDetail.Properties))
+			if (detailLevel.HasFlag(TypeDetails.Properties))
 			{
-				foreach(var property in type.PropertyTypes(r => !r.IsPrimitive && !r.IsPrimitive()))
-				{
-					try
-					{
-						graph.EdgeBetween(thisType, property);
-					}
-					catch { }
-				}
+				BuildGraphFromProperties(graph, type, thisType);
 			}
 
-			if (detailLevel.HasFlag(TypeDetail.Fields))
+			if (detailLevel.HasFlag(TypeDetails.Fields))
 			{
-				foreach (var field in type.FieldTypes(f => !f.IsPrimitive && !f.IsPrimitive()))
-				{
-					try
-					{
-						graph.EdgeBetween(thisType, field);
-					}
-					catch { }
-				}
+				BuildGraphFromFields(graph, type, thisType);
 			}
 
-			if (detailLevel.HasFlag(TypeDetail.Interfaces))
+			if (detailLevel.HasFlag(TypeDetails.Interfaces))
 			{
-				foreach(var intf in type.InterfaceTypes())
-				{
-					try
-					{
-						graph.EdgeBetween(thisType, intf);
-					}
-					catch { }
-				}
+				BuildGraphFromInterfaces(graph, type, thisType);
 			}
 
-			if (detailLevel.HasFlag(TypeDetail.Inheritance))
+			if (detailLevel.HasFlag(TypeDetails.Inheritance))
 			{
-				var inheritance = type.FindInheritance();
-
-				if (inheritance != null)
-				{
-					graph.EdgeBetween(thisType, inheritance);
-				}
+				BuildGraphFromInheritance(graph, type, thisType);
 			}
 
-			if (detailLevel.HasFlag(TypeDetail.MethodCalls) || detailLevel.HasFlag(TypeDetail.ObjectCreation))
+			if (detailLevel.HasFlag(TypeDetails.MethodCalls) || detailLevel.HasFlag(TypeDetails.ObjectCreation))
 			{
-				var mis = type.MethodTypes(m => !m.IsPrimitive && !m.IsPrimitive());
+				BuildGraphFromMethods(graph, type, detailLevel, thisType);
+			}
+		}
 
-				foreach(var mi in mis)
+		private static void BuildGraphFromProperties(Graph<TypeInfo> graph, TypeDefinition type, TypeInfo thisType)
+		{
+			foreach (var property in type.PropertyTypes(r => !r.IsPrimitive && !r.IsPrimitive()))
+			{
+				try
 				{
-					if (detailLevel.HasFlag(TypeDetail.MethodCalls))
-					{
-						if (mi.Signature.ReturnType != null)
-							graph.EdgeBetween(thisType, mi.Signature.ReturnType);
+					graph.EdgeBetween(thisType, property);
+				}
+				catch { }
+			}
+		}
 
-						foreach (var p in mi.Signature.Parameters)
-						{
-							graph.EdgeBetween(thisType, p);
-						}
+		private static void BuildGraphFromFields(Graph<TypeInfo> graph, TypeDefinition type, TypeInfo thisType)
+		{
+			foreach (var field in type.FieldTypes(f => !f.IsPrimitive && !f.IsPrimitive()))
+			{
+				try
+				{
+					graph.EdgeBetween(thisType, field);
+				}
+				catch { }
+			}
+		}
+
+		private static void BuildGraphFromInterfaces(Graph<TypeInfo> graph, TypeDefinition type, TypeInfo thisType)
+		{
+			foreach (var intf in type.InterfaceTypes())
+			{
+				try
+				{
+					graph.EdgeBetween(thisType, intf);
+				}
+				catch { }
+			}
+		}
+
+		private static void BuildGraphFromInheritance(Graph<TypeInfo> graph, TypeDefinition type, TypeInfo thisType)
+		{
+			var inheritance = type.FindInheritance();
+
+			if (inheritance != null)
+			{
+				graph.EdgeBetween(thisType, inheritance);
+			}
+		}
+
+		private static void BuildGraphFromMethods(Graph<TypeInfo> graph, TypeDefinition type, TypeDetails detailLevel, TypeInfo thisType)
+		{
+			var mis = type.MethodTypes(m => !m.IsPrimitive && !m.IsPrimitive());
+
+			foreach (var mi in mis)
+			{
+				if (detailLevel.HasFlag(TypeDetails.MethodCalls))
+				{
+					if (mi.Signature.ReturnType != null)
+						graph.EdgeBetween(thisType, mi.Signature.ReturnType);
+
+					foreach (var p in mi.Signature.Parameters)
+					{
+						graph.EdgeBetween(thisType, p);
 					}
+				}
 
-					if (detailLevel.HasFlag(TypeDetail.ObjectCreation))
+				if (detailLevel.HasFlag(TypeDetails.ObjectCreation))
+				{
+					foreach (var newObject in mi.CreatedObjects)
 					{
-						foreach (var newObject in mi.CreatedObjects)
-						{
-							graph.EdgeBetween(thisType, newObject);
-						}
+						graph.EdgeBetween(thisType, newObject);
 					}
 				}
 			}

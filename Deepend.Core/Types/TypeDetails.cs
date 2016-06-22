@@ -3,7 +3,7 @@
 namespace Deepend
 {
 	[Flags]
-	public enum TypeDetail
+	public enum TypeDetails
 	{
 		None = 0,
 		Fields = 1,
@@ -13,6 +13,7 @@ namespace Deepend
 		ObjectCreation = 16,
 		Inheritance = 32,
 		Interfaces = 64,
+		Events = 128,
 		All = 255
 	}
 }

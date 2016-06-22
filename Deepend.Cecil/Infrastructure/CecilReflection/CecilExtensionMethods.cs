@@ -124,7 +124,7 @@ namespace Deepend
 			"Enum"
 		};
 
-		public static bool IsPrimitive(this TypeReference type)
+		public static bool IsPrimitive(this MemberReference type)
 		{
 			return primitiveTypes.Contains(type.Name)
 				|| type.Name.EndsWith("Exception")
@@ -190,7 +190,7 @@ namespace Deepend
 			return builder.ToString();
 		}
 
-		public static string StripGenericNameSuffix(this TypeReference tr)
+		public static string StripGenericNameSuffix(this MemberReference tr)
 		{
 			const char Backtick = '`';
 

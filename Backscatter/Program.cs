@@ -13,8 +13,6 @@ namespace Backscatter
             {
 				string assemblyPath = string.Empty;
 
-				string specificType = string.Empty;
-				string specificNamespace = string.Empty;
 				string outputPath = string.Empty;
 				bool outputAsDot = false;
 				bool outputAsDgml = true;

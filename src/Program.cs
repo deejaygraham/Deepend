@@ -85,7 +85,7 @@ namespace Deepend
 				}
 				else
 				{
-					TypeDetail detail = TypeDetail.All;
+					TypeDetails detail = TypeDetails.All;
 
 					var filters = new List<IFilterTypes> 
 					{ 

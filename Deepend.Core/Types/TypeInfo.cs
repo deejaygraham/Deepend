@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Deepend
@@ -16,7 +17,7 @@ namespace Deepend
 
 		public string Id { get; private set; }
 
-		public Dictionary<string, string> Metadata { get; set; }
+		public Dictionary<string, string> Metadata { get; private set; }
 
 		public string FullName
 		{
@@ -72,24 +73,24 @@ namespace Deepend
 			return this.FullName.GetHashCode();
 		}
 
-		public static bool operator ==(TypeInfo a, TypeInfo b)
+		public static bool operator ==(TypeInfo first, TypeInfo second)
 		{
-			if (object.ReferenceEquals(a, b))
+			if (object.ReferenceEquals(first, second))
 			{
 				return true;
 			}
 
-			if (((object)a == null) || ((object)b == null))
+			if (((object)first == null) || ((object)second == null))
 			{
 				return false;
 			}
 
-			return a.FullName == b.FullName;
+			return first.FullName == second.FullName;
 		}
 
-		public static bool operator !=(TypeInfo a, TypeInfo b)
+		public static bool operator !=(TypeInfo first, TypeInfo second)
 		{
-			return !(a == b);
+			return !(first == second);
 		}
 
 		public override bool Equals(object obj)
@@ -106,9 +107,7 @@ namespace Deepend
 				return false;
 			}
 
-			const bool IgnoreCase = false;
-
-			return string.Compare(this.FullName, another.FullName, IgnoreCase) == 0;
+			return string.Compare(this.FullName, another.FullName, StringComparison.CurrentCultureIgnoreCase) == 0;
 		}
 
 		public int CompareTo(TypeInfo other)
@@ -120,10 +119,10 @@ namespace Deepend
 
 			if (this.Namespace != other.Namespace)
 			{
-				return this.Namespace.CompareTo(other.Namespace);
+				return string.Compare(this.Namespace, other.Namespace, StringComparison.CurrentCultureIgnoreCase);
 			}
 
-			return this.FullName.CompareTo(other.FullName);
+			return string.Compare(this.FullName, other.FullName, StringComparison.CurrentCultureIgnoreCase);
 		}
 	}
 

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,8 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnalyseAssemblyReferences.cs" />
-    <Compile Include="AnalyseAssemblyTypes.cs" />
     <Compile Include="AssemblyReferenceBuilder.cs" />
     <Compile Include="Infrastructure\CecilReflection\CecilExtensionMethods.cs" />
     <Compile Include="Filters\GeneratedTypeFilter.cs" />

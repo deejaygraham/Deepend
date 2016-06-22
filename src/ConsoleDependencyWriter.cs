@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Deepend
 {
-	public class ConsoleDependencyWriter
+	internal static class ConsoleDependencyWriter
 	{
-		public void Write(Graph<AssemblyInfo> graph)
+		public static void Write(Graph<AssemblyInfo> graph)
 		{
 			int count = 0;
 

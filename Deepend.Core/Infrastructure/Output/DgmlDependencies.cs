@@ -7,21 +7,15 @@ namespace Deepend
 {
     public class DgmlDependencies : IGraphDependencies
     {
-		//	writer.WriteLine("\t<Styles>");
-		//	writer.WriteLine("\t\t<Style TargetType=\"Node\">");
-		//	writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"Consolas\" />");
-		//	writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"12\" />");
-		//	writer.WriteLine("\t\t\t<Setter Property=\"Background\" Value=\"White\" />");
-		//	writer.WriteLine("\t\t\t<Setter Property=\"NodeRadius\" Value=\"3\" />");
-		//	writer.WriteLine("\t\t</Style>");
-		//	writer.WriteLine("\t\t<Style TargetType=\"Link\">");
-		//	writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"Consolas\" />");
-		//	writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"12\" />");
-		//	writer.WriteLine("\t\t</Style>");
-		//	writer.WriteLine("\t</Styles>");
+		public DgmlDependencies()
+		{
+			this.FontFamily = "Consolas";
+			this.FontSize = 12;
+		}
 
-		//	writer.WriteLine("</DirectedGraph>");
-		//}
+		public string FontFamily { get; set; }
+
+		public int FontSize { get; set; }
 
 		public void Write(Graph<AssemblyInfo> graph, TextWriter writer)
 		{
@@ -32,7 +26,14 @@ namespace Deepend
 
 			foreach (var node in graph.Nodes)
 			{
-				writer.WriteLine("\t\t<Node Id=\"{0}\" Label=\"{1}\" />", node.Id, node.Name);
+				writer.Write("\t\t<Node Id=\"{0}\" Label=\"{1}\" ", node.Id, node.Name);
+
+				foreach (var pair in node.Metadata)
+				{
+					writer.Write("{0}=\"{1}\" ", pair.Key, pair.Value);
+				}
+
+				writer.WriteLine("/>");
 			}
 
 			writer.WriteLine("\t</Nodes>");
@@ -43,10 +44,30 @@ namespace Deepend
 			{
 				foreach(var edge in graph.EdgesFor(node))
 				{
-					writer.WriteLine("\t\t<Link Source=\"{0}\" Target=\"{1}\" />", node.Id, edge.Id);
+					writer.Write("\t\t<Link Source=\"{0}\" Target=\"{1}\" ", node.Id, edge.Id);
+
+					//foreach (var pair in edge.Metadata)
+					//{
+					//	writer.Write("{0}=\"{1}\" ", pair.Key, pair.Value);
+					//}
+
+					writer.WriteLine("/>");
+
 				}
 			}
 			writer.WriteLine("\t</Links>");
+
+			writer.WriteLine("\t<Styles>");
+			writer.WriteLine("\t\t<Style TargetType=\"Node\">");
+			writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"{0}\" />", this.FontFamily);
+			writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"{0}\" />", this.FontSize);
+			writer.WriteLine("\t\t\t<Setter Property=\"NodeRadius\" Value=\"3\" />");
+			writer.WriteLine("\t\t</Style>");
+			writer.WriteLine("\t\t<Style TargetType=\"Link\">");
+			writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"{0}\" />", this.FontFamily);
+			writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"{0}\" />", this.FontSize);
+			writer.WriteLine("\t\t</Style>");
+			writer.WriteLine("\t</Styles>");
 
 			writer.WriteLine("</DirectedGraph>");
 		}
@@ -69,7 +90,7 @@ namespace Deepend
 					writer.Write("{0}=\"{1}\" ", pair.Key, pair.Value);
 				}
 
-				writer.WriteLine("/>", node.Id, node.FullName.ToSafeName());
+				writer.WriteLine("/>");
 			}
 
 			writer.WriteLine("\t</Nodes>");
@@ -80,16 +101,34 @@ namespace Deepend
 			{
 				foreach (var edge in graph.EdgesFor(node))
 				{
-					writer.WriteLine("\t\t<Link Source=\"{0}\" Target=\"{1}\" />", node.Id, edge.Id);
+					writer.Write("\t\t<Link Source=\"{0}\" Target=\"{1}\" ", node.Id, edge.Id);
+
+					//foreach (var pair in edge.Metadata)
+					//{
+					//	writer.Write("{0}=\"{1}\" ", pair.Key, pair.Value);
+					//}
+
+					writer.WriteLine(" ./>");
 				}
 			}
 			writer.WriteLine("\t</Links>");
 
+			writer.WriteLine("\t<Styles>");
+			writer.WriteLine("\t\t<Style TargetType=\"Node\">");
+			writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"{0}\" />", this.FontFamily);
+			writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"{0}\" />", this.FontSize);
+			writer.WriteLine("\t\t\t<Setter Property=\"NodeRadius\" Value=\"3\" />");
+			writer.WriteLine("\t\t</Style>");
+			writer.WriteLine("\t\t<Style TargetType=\"Link\">");
+			writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"{0}\" />", this.FontFamily);
+			writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"{0}\" />", this.FontSize);
+			writer.WriteLine("\t\t</Style>");
+			writer.WriteLine("\t</Styles>");
+
 			writer.WriteLine("</DirectedGraph>");
 		}
 
-		//	builder.AppendFormat("<Node Id=\"{0}\" Label=\"{1}\" ", n.Id, n.Name);
-
+		// node
 		//	if (n.Group)
 		//	{
 		//		string state = n.Expand ? "Expanded" : "Collapsed";
@@ -97,20 +136,7 @@ namespace Deepend
 		//		builder.AppendFormat("Group=\"{0}\" ", state);
 		//	}
 
-		//	if (!String.IsNullOrEmpty(n.Colour))
-		//	{
-		//		builder.AppendFormat("Background=\"{0}\" ", n.Colour);
-		//	}
-
-		//	builder.Append(" />");
-
-		//	this._nodes.Add(builder.ToString());
-		//}
-
-		//public void Edge(Edge e)
-		//{
-		//	var builder = new StringBuilder();
-
+		// edge
 		//	if (e.Group)
 		//	{
 		//		builder.Append("Category=\"Contains\" ");
@@ -131,9 +157,5 @@ namespace Deepend
 		//		builder.Append("StrokeDashArray=\"1,3\" ");
 		//	}
 
-		//	builder.Append(" />");
-
-		//	this._links.Add(builder.ToString());
-		//}
     }
 }

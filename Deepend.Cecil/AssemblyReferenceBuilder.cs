@@ -9,6 +9,95 @@ namespace Deepend
 {
 	public static class AssemblyReferenceBuilder
 	{
+		#region Colours
+
+		// dgml specific !
+		private static readonly Dictionary<string, Dictionary<string, string>> assemblyMetadata = new Dictionary<string, Dictionary<string, string>>
+		{
+			//{ 
+			//	"Microsoft.WindowsAzure", 
+			//	new Dictionary<string, string> 
+			//	{ 
+			//		{ "Background", "#1a1a1a" }, 
+			//		{ "Foreground", "#2793c5" }
+			//	}
+			//},
+			{ 
+				"System", 
+				new Dictionary<string, string> 
+				{ 
+					{ "Background", "#68217a" }, 
+					{ "Stroke", "#68217a" },
+					{ "Foreground", "#fff" }
+				}
+			},
+			{ 
+				"mscorlib", 
+				new Dictionary<string, string> 
+				{ 
+					{ "Background", "#68217a" }, 
+					{ "Stroke", "#68217a" }, 
+					{ "Foreground", "#fff" }
+				}
+			},
+			{ 
+				"Microsoft", 
+				new Dictionary<string, string>
+				{ 
+					{ "Background", "#91ce00" }, 
+					{ "Stroke", "#91ce00" }, 
+					{ "Foreground", "#fff" }
+				}
+			},
+			{
+				"PresentationCore",
+				new Dictionary<string, string>
+				{
+					{ "Background", "#91ce00" }, 
+					{ "Stroke", "#91ce00" }, 
+					{ "Foreground", "#fff" }
+				}
+			},
+			{
+				"PresentationFramework",
+				new Dictionary<string, string>
+				{
+					{ "Background", "#91ce00" }, 
+					{ "Stroke", "#91ce00" }, 
+					{ "Foreground", "#fff" }
+				}
+			},
+			{
+				"WindowsBase",
+				new Dictionary<string, string>
+				{
+					{ "Background", "#91ce00" }, 
+					{ "Stroke", "#91ce00" }, 
+					{ "Foreground", "#fff" }
+				}
+			},
+			{
+				"WindowsForms",
+				new Dictionary<string, string>
+				{
+					{ "Background", "#91ce00" }, 
+					{ "Stroke", "#91ce00" }, 
+					{ "Foreground", "#fff" }
+				}
+			},
+			{
+				"UIAutomation",
+				new Dictionary<string, string>
+				{
+					{ "Background", "#91ce00" }, 
+					{ "Stroke", "#91ce00" }, 
+					{ "Foreground", "#fff" }
+				}
+			}
+		};
+
+		#endregion Colours
+
 		public static Graph<AssemblyInfo> Build(string assembly, ReferenceDepth depth)
 		{
 			var graph = new Graph<AssemblyInfo>();
@@ -30,6 +119,25 @@ namespace Deepend
 				AssemblyLocation.Local
 			);
 
+			if (level == 0)
+			{
+				// starting assembly !
+				assembly.Metadata.Add("Background", "#ffb900");
+			}
+			else
+			{
+				foreach (var metadata in assemblyMetadata)
+				{
+					if (assembly.Name.StartsWith(metadata.Key))
+					{
+						foreach (var specific in metadata.Value)
+						{
+							assembly.Metadata.Add(specific.Key, specific.Value);
+						}
+					}
+				}
+			}
+
 			if (dependent == null)
 				graph.Add(assembly);
 			else
@@ -49,7 +157,13 @@ namespace Deepend
 				if (!System.IO.File.Exists(pathToReference))
 				{
 					// is it in the GAC?
-					pathToReference = NativeMethods.QueryPathInGlobalAssemblyCache(reference.Name);
+					try
+					{
+						pathToReference = NativeMethods.QueryPathInGlobalAssemblyCache(reference.Name);
+					}
+					catch
+					{
+					}
 				}
 
 				if (!System.IO.File.Exists(pathToReference))

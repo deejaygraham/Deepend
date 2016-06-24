@@ -33,6 +33,15 @@ namespace Deepend
 				AssemblyLocation.Local
 			);
 
+			if (assembly.Name.StartsWith("Microsoft."))
+			{
+				assembly.Metadata.Add("Background", "#cccc");
+			}
+			else if (assembly.Name.StartsWith("System."))
+			{
+				assembly.Metadata.Add("Background", "#ff00ff");
+			}
+
 			graph.Add(assembly);
 
 			alreadySeen.Add(assemblyName);

@@ -66,10 +66,6 @@
       <Project>{70b86015-f1d8-46c9-b5ab-b2483ac4cacd}</Project>
       <Name>Deepend.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Deepend.csproj">
-      <Project>{60bfab11-202e-4f20-9688-d54e212ddd80}</Project>
-      <Name>Deepend</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Deepend
 {
-	public class AssemblyInfo : IComparable<AssemblyInfo>
+	public class AssemblyInfo : IComparable<AssemblyInfo>, IGraphItem
 	{
 		public AssemblyInfo(string name, Version version)
 			: this(name, version, string.Empty, AssemblyLocation.Unknown)

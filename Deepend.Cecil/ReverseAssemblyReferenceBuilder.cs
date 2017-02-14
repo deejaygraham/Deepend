@@ -10,18 +10,18 @@ namespace Deepend
 {
 	public static class ReverseAssemblyReferenceBuilder
 	{
-		public static Graph<AssemblyInfo> Build(string assembly, string folder)
+		public static Graph<IGraphItem> Build(string assembly, string folder)
 		{
-			var graph = new Graph<AssemblyInfo>();
+			var graph = new Graph<IGraphItem>();
 
 			var allAssemblies = new List<string>(Directory.EnumerateFiles(folder, "*.dll"));
 
-			Build(graph, new Graph<AssemblyInfo>(), assembly, folder, allAssemblies, new List<string>());
+			Build(graph, new Graph<IGraphItem>(), assembly, folder, allAssemblies, new List<string>());
 
 			return graph;
 		}
 
-		private static void Build(Graph<AssemblyInfo> graph, Graph<AssemblyInfo> reverseGraph, string assemblyName, string folder, List<string> allAssemblies, List<string> alreadySeen)
+		private static void Build(Graph<IGraphItem> graph, Graph<IGraphItem> reverseGraph, string assemblyName, string folder, List<string> allAssemblies, List<string> alreadySeen)
 		{
 			var reflection = AssemblyDefinition.ReadAssembly(assemblyName);
 

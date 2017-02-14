@@ -17,7 +17,7 @@ namespace Deepend
 
 		public int FontSize { get; set; }
 
-		public void Write(Graph<AssemblyInfo> graph, TextWriter writer)
+		public void Write(Graph<IGraphItem> graph, TextWriter writer)
 		{
 			writer.WriteLine("<?xml version=\'1.0\' encoding=\'utf-8\'?>");
 			writer.WriteLine("<DirectedGraph xmlns=\'http://schemas.microsoft.com/vs/2009/dgml\' GraphDirection=\"LeftToRight\">");
@@ -72,61 +72,61 @@ namespace Deepend
 			writer.WriteLine("</DirectedGraph>");
 		}
 
-		public void Write(Graph<TypeInfo> graph, TextWriter writer)
-		{
-			// need handling for namespaces ???
+		//public void Write(Graph<TypeInfo> graph, TextWriter writer)
+		//{
+		//	// need handling for namespaces ???
 
-			writer.WriteLine("<?xml version=\'1.0\' encoding=\'utf-8\'?>");
-			writer.WriteLine("<DirectedGraph xmlns=\'http://schemas.microsoft.com/vs/2009/dgml\' GraphDirection=\"LeftToRight\">");
+		//	writer.WriteLine("<?xml version=\'1.0\' encoding=\'utf-8\'?>");
+		//	writer.WriteLine("<DirectedGraph xmlns=\'http://schemas.microsoft.com/vs/2009/dgml\' GraphDirection=\"LeftToRight\">");
 
-			writer.WriteLine("\t<Nodes>");
+		//	writer.WriteLine("\t<Nodes>");
 
-			foreach (var node in graph.Nodes)
-			{
-				writer.Write("\t\t<Node Id=\"{0}\" Label=\"{1}\" ", node.Id, node.FullName.ToSafeName());
+		//	foreach (var node in graph.Nodes)
+		//	{
+		//		writer.Write("\t\t<Node Id=\"{0}\" Label=\"{1}\" ", node.Id, node.FullName.ToSafeName());
 
-				foreach(var pair in node.Metadata)
-				{
-					writer.Write("{0}=\"{1}\" ", pair.Key, pair.Value);
-				}
+		//		foreach(var pair in node.Metadata)
+		//		{
+		//			writer.Write("{0}=\"{1}\" ", pair.Key, pair.Value);
+		//		}
 
-				writer.WriteLine("/>");
-			}
+		//		writer.WriteLine("/>");
+		//	}
 
-			writer.WriteLine("\t</Nodes>");
+		//	writer.WriteLine("\t</Nodes>");
 
-			writer.WriteLine("\t<Links>");
+		//	writer.WriteLine("\t<Links>");
 
-			foreach (var node in graph.Nodes)
-			{
-				foreach (var edge in graph.EdgesFor(node))
-				{
-					writer.Write("\t\t<Link Source=\"{0}\" Target=\"{1}\" ", node.Id, edge.Id);
+		//	foreach (var node in graph.Nodes)
+		//	{
+		//		foreach (var edge in graph.EdgesFor(node))
+		//		{
+		//			writer.Write("\t\t<Link Source=\"{0}\" Target=\"{1}\" ", node.Id, edge.Id);
 
-					//foreach (var pair in edge.Metadata)
-					//{
-					//	writer.Write("{0}=\"{1}\" ", pair.Key, pair.Value);
-					//}
+		//			//foreach (var pair in edge.Metadata)
+		//			//{
+		//			//	writer.Write("{0}=\"{1}\" ", pair.Key, pair.Value);
+		//			//}
 
-					writer.WriteLine(" ./>");
-				}
-			}
-			writer.WriteLine("\t</Links>");
+		//			writer.WriteLine(" ./>");
+		//		}
+		//	}
+		//	writer.WriteLine("\t</Links>");
 
-			writer.WriteLine("\t<Styles>");
-			writer.WriteLine("\t\t<Style TargetType=\"Node\">");
-			writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"{0}\" />", this.FontFamily);
-			writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"{0}\" />", this.FontSize);
-			writer.WriteLine("\t\t\t<Setter Property=\"NodeRadius\" Value=\"3\" />");
-			writer.WriteLine("\t\t</Style>");
-			writer.WriteLine("\t\t<Style TargetType=\"Link\">");
-			writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"{0}\" />", this.FontFamily);
-			writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"{0}\" />", this.FontSize);
-			writer.WriteLine("\t\t</Style>");
-			writer.WriteLine("\t</Styles>");
+		//	writer.WriteLine("\t<Styles>");
+		//	writer.WriteLine("\t\t<Style TargetType=\"Node\">");
+		//	writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"{0}\" />", this.FontFamily);
+		//	writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"{0}\" />", this.FontSize);
+		//	writer.WriteLine("\t\t\t<Setter Property=\"NodeRadius\" Value=\"3\" />");
+		//	writer.WriteLine("\t\t</Style>");
+		//	writer.WriteLine("\t\t<Style TargetType=\"Link\">");
+		//	writer.WriteLine("\t\t\t<Setter Property=\"FontFamily\" Value=\"{0}\" />", this.FontFamily);
+		//	writer.WriteLine("\t\t\t<Setter Property=\"FontSize\" Value=\"{0}\" />", this.FontSize);
+		//	writer.WriteLine("\t\t</Style>");
+		//	writer.WriteLine("\t</Styles>");
 
-			writer.WriteLine("</DirectedGraph>");
-		}
+		//	writer.WriteLine("</DirectedGraph>");
+		//}
 
 		// node
 		//	if (n.Group)

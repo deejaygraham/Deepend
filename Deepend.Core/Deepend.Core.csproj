@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Assemblies\AssemblyInfo.cs" />
     <Compile Include="Assemblies\AssemblyLocation.cs" />
+    <Compile Include="Graphs\IGraphItem.cs" />
     <Compile Include="Infrastructure\Output\DgmlDependencies.cs" />
     <Compile Include="Infrastructure\Output\DotGraphDependencies.cs" />
     <Compile Include="Graphs\Graph.cs" />

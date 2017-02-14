@@ -66,6 +66,7 @@
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReverseAssemblyReferenceBuilder.cs" />
+    <Compile Include="ReverseTypeReferenceBuilder.cs" />
     <Compile Include="TypeReferenceBuilder.cs" />
     <Compile Include="Filters\TypeSpecificFilter.cs" />
   </ItemGroup>

@@ -98,16 +98,16 @@ namespace Deepend
 
 		#endregion Colours
 
-		public static Graph<AssemblyInfo> Build(string assembly, ReferenceDepth depth)
+		public static Graph<IGraphItem> Build(string assembly, ReferenceDepth depth)
 		{
-			var graph = new Graph<AssemblyInfo>();
+			var graph = new Graph<IGraphItem>();
 
 			Build(graph, null, assembly, depth, 0, new List<string>());
 
 			return graph;
 		}
 
-		private static void Build(Graph<AssemblyInfo> graph, AssemblyInfo dependent, string assemblyName, ReferenceDepth depth, int level, IList<string> visitedAssemblies)
+		private static void Build(Graph<IGraphItem> graph, AssemblyInfo dependent, string assemblyName, ReferenceDepth depth, int level, IList<string> visitedAssemblies)
 		{
 			var reflection = AssemblyDefinition.ReadAssembly(assemblyName);
 
@@ -168,6 +168,7 @@ namespace Deepend
 
 				if (!System.IO.File.Exists(pathToReference))
 				{
+					Console.WriteLine("Reference {0} not found", pathToReference);
 					graph.EdgeBetween(assembly, new AssemblyInfo(reference.Name, reference.Version));
 				}
 				else

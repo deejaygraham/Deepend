@@ -6,14 +6,14 @@ namespace Deepend
 {
 	public static class TypeReferenceBuilder
 	{
-		public static Graph<TypeInfo> Build(string assemblyName, TypeDetails detail, IEnumerable<IFilterTypes> filters)
+		public static Graph<IGraphItem> Build(string assemblyName, TypeDetails detail, IEnumerable<IFilterTypes> filters)
 		{
 			if (!File.Exists(assemblyName))
 			{
 				throw new FileNotFoundException(assemblyName);
 			}
 
-			var graph = new Graph<TypeInfo>();
+			var graph = new Graph<IGraphItem>();
 
 			var assemblyContent = AssemblyDefinition.ReadAssembly(assemblyName);
 
@@ -32,7 +32,7 @@ namespace Deepend
 			return graph;
 		}
 
-		private static void Build(Graph<TypeInfo> graph, TypeDefinition type, TypeDetails detailLevel)
+		private static void Build(Graph<IGraphItem> graph, TypeDefinition type, TypeDetails detailLevel)
 		{
 			var thisType = new TypeInfo(type.FullName);
 
@@ -68,7 +68,7 @@ namespace Deepend
 			}
 		}
 
-		private static void BuildGraphFromProperties(Graph<TypeInfo> graph, TypeDefinition type, TypeInfo thisType)
+		private static void BuildGraphFromProperties(Graph<IGraphItem> graph, TypeDefinition type, TypeInfo thisType)
 		{
 			foreach (var property in type.PropertyTypes(r => !r.IsPrimitive && !r.IsPrimitive()))
 			{
@@ -80,7 +80,7 @@ namespace Deepend
 			}
 		}
 
-		private static void BuildGraphFromFields(Graph<TypeInfo> graph, TypeDefinition type, TypeInfo thisType)
+		private static void BuildGraphFromFields(Graph<IGraphItem> graph, TypeDefinition type, TypeInfo thisType)
 		{
 			foreach (var field in type.FieldTypes(f => !f.IsPrimitive && !f.IsPrimitive()))
 			{
@@ -92,7 +92,7 @@ namespace Deepend
 			}
 		}
 
-		private static void BuildGraphFromInterfaces(Graph<TypeInfo> graph, TypeDefinition type, TypeInfo thisType)
+		private static void BuildGraphFromInterfaces(Graph<IGraphItem> graph, TypeDefinition type, TypeInfo thisType)
 		{
 			foreach (var intf in type.InterfaceTypes())
 			{
@@ -104,7 +104,7 @@ namespace Deepend
 			}
 		}
 
-		private static void BuildGraphFromInheritance(Graph<TypeInfo> graph, TypeDefinition type, TypeInfo thisType)
+		private static void BuildGraphFromInheritance(Graph<IGraphItem> graph, TypeDefinition type, TypeInfo thisType)
 		{
 			var inheritance = type.FindInheritance();
 
@@ -114,7 +114,7 @@ namespace Deepend
 			}
 		}
 
-		private static void BuildGraphFromMethods(Graph<TypeInfo> graph, TypeDefinition type, TypeDetails detailLevel, TypeInfo thisType)
+		private static void BuildGraphFromMethods(Graph<IGraphItem> graph, TypeDefinition type, TypeDetails detailLevel, TypeInfo thisType)
 		{
 			var mis = type.MethodTypes(m => !m.IsPrimitive && !m.IsPrimitive());
 

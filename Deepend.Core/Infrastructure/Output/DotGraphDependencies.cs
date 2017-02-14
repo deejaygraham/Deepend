@@ -13,7 +13,7 @@ namespace Deepend
 		readonly string NodeStyle = "node[style = filled, shape = box];";
 		readonly string Direction = "rankdir = LR";
 
-		public void Write(Graph<AssemblyInfo> graph, TextWriter writer)
+		public void Write(Graph<IGraphItem> graph, TextWriter writer)
 		{
 			writer.WriteLine(DotGraphHeader);
 			writer.WriteLine(OpeningBrace);
@@ -34,26 +34,26 @@ namespace Deepend
 			writer.WriteLine(ClosingBrace);
 		}
 
-		public void Write(Graph<TypeInfo> graph, TextWriter writer)
-		{
-			writer.WriteLine(DotGraphHeader);
-			writer.WriteLine(OpeningBrace);
-			writer.WriteLine(GraphLayout);
-			writer.WriteLine(NodeStyle);
-			writer.WriteLine(Direction);
+		//public void Write(Graph<TypeInfo> graph, TextWriter writer)
+		//{
+		//	writer.WriteLine(DotGraphHeader);
+		//	writer.WriteLine(OpeningBrace);
+		//	writer.WriteLine(GraphLayout);
+		//	writer.WriteLine(NodeStyle);
+		//	writer.WriteLine(Direction);
 
-			foreach (var node in graph.Nodes)
-			{
-				foreach (var edge in graph.EdgesFor(node))
-				{
-					WriteDepends(node.Name, edge.Name, writer);
-				}
+		//	foreach (var node in graph.Nodes)
+		//	{
+		//		foreach (var edge in graph.EdgesFor(node))
+		//		{
+		//			WriteDepends(node.NameWithoutNamespace, edge.NameWithoutNamespace, writer);
+		//		}
 
-				WriteMetadata(node.Name, node.Metadata, writer);
-			}
+		//		WriteMetadata(node.NameWithoutNamespace, node.Metadata, writer);
+		//	}
 
-			writer.WriteLine(ClosingBrace);
-		}
+		//	writer.WriteLine(ClosingBrace);
+		//}
 
 		private void WriteDepends(string from, string to, TextWriter writer)
 		{

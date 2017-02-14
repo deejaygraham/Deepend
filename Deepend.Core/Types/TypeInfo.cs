@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Deepend
 {
-	public class TypeInfo
+	public class TypeInfo : IGraphItem
 	{
 		private readonly string name;
 
@@ -28,6 +28,14 @@ namespace Deepend
 		}
 		
 		public string Name
+		{
+			get
+			{
+				return this.FullName.ToSafeName();
+			}
+		}
+
+		public string NameWithoutNamespace
 		{
 			get
 			{

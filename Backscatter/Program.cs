@@ -16,6 +16,7 @@ namespace Backscatter
 				string outputPath = string.Empty;
 				bool outputAsDot = false;
 				bool outputAsDgml = true;
+				int depth = 0;
 
 				bool showHelp = false;
 
@@ -24,6 +25,7 @@ namespace Backscatter
 					{ "o|output=", "Output Path", v => outputPath = v },
 					{ "dot", "Output as .dot file", v => outputAsDot = true },
 					{ "dgml", "Output as .dgml file", v => outputAsDgml = true },
+					{ "d|depth=", "Depth of search", v => depth = Int32.Parse(v) },
 					{"?|help", "Show this help", v => showHelp = v != null }
 				};
 			
@@ -39,7 +41,7 @@ namespace Backscatter
 				string assemblyFolder = System.IO.Path.GetDirectoryName(assemblyPath);
 
 				// find all assemblies that contain a reference to this assembly
-				var graph = ReverseAssemblyReferenceBuilder.Build(assemblyPath, assemblyFolder);
+				var graph = ReverseAssemblyReferenceBuilder.Build(assemblyPath, assemblyFolder, depth);
 
 				IGraphDependencies dg = new DgmlDependencies();
 

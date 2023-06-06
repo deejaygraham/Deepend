@@ -10,19 +10,22 @@ namespace Deepend
 {
 	public static class ReverseAssemblyReferenceBuilder
 	{
-		public static Graph<IGraphItem> Build(string assembly, string folder)
+		public static Graph<IGraphItem> Build(string assembly, string folder, int depth)
 		{
 			var graph = new Graph<IGraphItem>();
 
 			var allAssemblies = new List<string>(Directory.EnumerateFiles(folder, "*.dll"));
+            int level = 0;
 
-			Build(graph, new Graph<IGraphItem>(), assembly, folder, allAssemblies, new List<string>());
+			Build(graph, new Graph<IGraphItem>(), assembly, folder, allAssemblies, new List<string>(), level + 1, depth);
 
 			return graph;
 		}
 
-		private static void Build(Graph<IGraphItem> graph, Graph<IGraphItem> reverseGraph, string assemblyName, string folder, List<string> allAssemblies, List<string> alreadySeen)
-		{
+		private static void Build(Graph<IGraphItem> graph, Graph<IGraphItem> reverseGraph, string assemblyName, string folder, List<string> allAssemblies, List<string> alreadySeen, int level, int depth)
+        {
+            if (depth > 0 && level > depth) return;
+
 			var reflection = AssemblyDefinition.ReadAssembly(assemblyName);
 
 			var assembly = new AssemblyInfo
@@ -32,6 +35,12 @@ namespace Deepend
 				reflection.MainModule.Runtime.ToString().Replace("_", "."),
 				AssemblyLocation.Local
 			);
+
+            if (alreadySeen.Count == 0)
+            {
+				// this is the primary node...
+				assembly.Metadata.Add("Background", "#ff0000");
+            }
 
 			if (assembly.Name.StartsWith("Microsoft."))
 			{
@@ -74,7 +83,7 @@ namespace Deepend
 			foreach (var edge in reverseGraph.EdgesFor(assembly))
 			{
 				// load each one ???
-				Build(graph, reverseGraph, Path.Combine(folder, edge.Name + ".dll"), folder, allAssemblies, alreadySeen);
+				Build(graph, reverseGraph, Path.Combine(folder, edge.Name + ".dll"), folder, allAssemblies, alreadySeen, level + 1, depth);
 			}
 		}
 
